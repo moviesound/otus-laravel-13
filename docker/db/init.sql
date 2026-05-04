@@ -1,0 +1,3 @@
+CREATE DATABASE admin_db;
+GRANT ALL PRIVILEGES ON admin_db.* TO 'laravel_user'@'%';
+FLUSH PRIVILEGES;

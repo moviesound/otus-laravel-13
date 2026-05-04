@@ -1,6 +1,6 @@
 <?php
 
 return [
-    'task' => App\Models\TaskTemplate::class,
-    'event' => App\Models\EventTemplate::class,
+    'task' => \App\Models\Bot\TaskTemplate::class,
+    'event' => \App\Models\Bot\EventTemplate::class,
 ];
