@@ -75,11 +75,8 @@ class DemoDataSeeder extends Seeder
             'template_id' => $template->id,
         ]);
 
-        //pivot table common_entity_task
-        CommonEntityTask::create([
-            'entity_id' => $entity->id,
-            'child_id' => $task->id,
-        ]);
+        // pivot table common_entity_tasks
+        $entity->tasks()->attach($task->id);
 
         // reminders
         $this->createReminders($template, $entity);
@@ -103,10 +100,8 @@ class DemoDataSeeder extends Seeder
         ]);
 
         //pivot table common_entity_event
-        CommonEntityEvent::create([
-            'entity_id' => $entity->id,
-            'child_id' => $event->id,
-        ]);
+        $entity->events()->attach($event->id);
+
 
         // reminders
         $this->createReminders($template, $entity);
@@ -126,13 +121,8 @@ class DemoDataSeeder extends Seeder
             ]);
 
         foreach ($reminderTemplates as $reminderTemplate) {
-            $reminder = Reminder::factory()->create([
+            Reminder::factory()->create([
                 'template_id' => $template->id,
-            ]);
-
-            CommonEntityReminder::create([
-                'entity_id' => $entity->id,
-                'child_id' => $reminder->id,
             ]);
         }
     }
