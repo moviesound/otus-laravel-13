@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Contracts\SysTextInterface;
 use App\Http\Controllers\Controller;
-use App\Objects\SysTextSearchObject;
-use App\Objects\SysTextStoreObject;
-use App\Objects\SysTextUpdateObject;
-use Illuminate\Http\Request;
+use App\DTO\SysTextSearchDTO;
+use App\DTO\SysTextStoreDTO;
+use App\DTO\SysTextUpdateDTO;
+use App\Http\Controllers\Admin\Requests\SysTextSearchRequest;
+use App\Http\Controllers\Admin\Requests\SysTextStoreRequest;
+use App\Http\Controllers\Admin\Requests\SysTextUpdateRequest;
 
 class SysTextController extends Controller
 {
@@ -21,17 +23,17 @@ class SysTextController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(?Request $request)
+    public function index(SysTextSearchRequest $request)
     {
-        $langs = config('langs.list', ['ru']);
+        $data = $request->toDTOArray();
 
-        $searchObject = SysTextSearchObject::create([
-            'alias' => $request->input('alias', null),
-            'lang' => $request->input('lang', null),
-            'perPage' => $request->input('per_page', 20)
-        ], $langs);
+        $dto = new SysTextSearchDTO(
+            alias: $data['alias'],
+            lang: $data['lang'],
+            perPage: $data['perPage'],
+        );
 
-        $texts = $this->sysTextService->getList($searchObject)
+        $texts = $this->sysTextService->getList($dto)
             ->appends($request->query());
 
         return view('texts.index', compact('texts'));
@@ -53,17 +55,17 @@ class SysTextController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(SysTextStoreRequest $request)
     {
-        $langs = config('langs.list', ['ru']);
+        $data = $request->toDTOArray();
 
-        $storeObject = SysTextStoreObject::create([
-            'alias' => $request->input('alias'),
-            'context' => $request->input('context'),
-            'lang' => $request->input('lang'),
-        ], $langs);
+        $dto = new SysTextStoreDTO(
+            alias: $data['alias'],
+            context: $data['context'],
+            lang: $data['lang'],
+        );
 
-        $isSuccess = $this->sysTextService->storeRow($storeObject);
+        $isSuccess = $this->sysTextService->storeRow($dto);
 
         if ($isSuccess === false) {
             return response()->json([
@@ -74,8 +76,8 @@ class SysTextController extends Controller
 
         return response()->json([
             'status' => 'ok',
-            'message' => 'Запись успешно добавлена. После закрытия сообщения
-            страница обновится, а запись появится в начале таблицы'
+            'message' => 'Запись успешно добавлена. После закрытия сообщения страница обновится,
+            а запись появится в начале таблицы'
         ]);
     }
 
@@ -115,15 +117,17 @@ class SysTextController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, int $id)
+    public function update(SysTextUpdateRequest $request, int $id)
     {
-        $updateObject = SysTextUpdateObject::create([
-            'id' => $id,
-            'alias' => $request->alias,
-            'context' => $request->context
-        ]);
+        $data = $request->toDTOArray();
 
-        $isSuccess = $this->sysTextService->updateRow($updateObject);
+        $dto = new SysTextUpdateDTO(
+            id: $data['id'],
+            alias: $data['alias'],
+            context: $data['context'],
+        );
+
+        $isSuccess = $this->sysTextService->updateRow($dto);
 
         if ($isSuccess === false) {
             return response()->json([
@@ -134,8 +138,7 @@ class SysTextController extends Controller
 
         return response()->json([
             'status' => 'ok',
-            'message' => 'Запись успешно обновлена. После закрытия сообщения
-            страница обновится и запись перенесётся в начало таблицы'
+            'message' => 'Запись успешно обновлена'
         ]);
     }
 
