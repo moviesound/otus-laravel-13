@@ -2,20 +2,20 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use App\Models\UserSocial;
-use App\Models\UserState;
-use App\Models\CommonEntity;
-use App\Models\CommonEntityTask;
-use App\Models\CommonEntityEvent;
-use App\Models\CommonEntityReminder;
-use App\Models\TaskTemplate;
-use App\Models\EventTemplate;
-use App\Models\Task;
-use App\Models\Event;
-use App\Models\Tag;
-use App\Models\ReminderTemplate;
-use App\Models\Reminder;
+use App\Models\Bot\CommonEntity;
+use App\Models\Bot\CommonEntityEvent;
+use App\Models\Bot\CommonEntityReminder;
+use App\Models\Bot\CommonEntityTask;
+use App\Models\Bot\Event;
+use App\Models\Bot\EventTemplate;
+use App\Models\Bot\Reminder;
+use App\Models\Bot\ReminderTemplate;
+use App\Models\Bot\Tag;
+use App\Models\Bot\Task;
+use App\Models\Bot\TaskTemplate;
+use App\Models\Bot\User;
+use App\Models\Bot\UserSocial;
+use App\Models\Bot\UserState;
 use Illuminate\Database\Seeder;
 
 /**
@@ -75,11 +75,8 @@ class DemoDataSeeder extends Seeder
             'template_id' => $template->id,
         ]);
 
-        //pivot table common_entity_task
-        CommonEntityTask::create([
-            'entity_id' => $entity->id,
-            'child_id' => $task->id,
-        ]);
+        // pivot table common_entity_tasks
+        $entity->tasks()->attach($task->id);
 
         // reminders
         $this->createReminders($template, $entity);
@@ -103,10 +100,8 @@ class DemoDataSeeder extends Seeder
         ]);
 
         //pivot table common_entity_event
-        CommonEntityEvent::create([
-            'entity_id' => $entity->id,
-            'child_id' => $event->id,
-        ]);
+        $entity->events()->attach($event->id);
+
 
         // reminders
         $this->createReminders($template, $entity);
@@ -126,13 +121,8 @@ class DemoDataSeeder extends Seeder
             ]);
 
         foreach ($reminderTemplates as $reminderTemplate) {
-            $reminder = Reminder::factory()->create([
+            Reminder::factory()->create([
                 'template_id' => $template->id,
-            ]);
-
-            CommonEntityReminder::create([
-                'entity_id' => $entity->id,
-                'child_id' => $reminder->id,
             ]);
         }
     }
