@@ -3,15 +3,15 @@
 namespace App\Services;
 
 use App\Contracts\SysTextInterface;
-use App\Objects\SysTextSearchObject;
-use App\Objects\SysTextStoreObject;
-use App\Objects\SysTextUpdateObject;
+use App\DTO\SysTextStoreDTO;
+use App\DTO\SysTextUpdateDTO;
+use App\DTO\SysTextSearchDTO;
 use App\Repositories\SysTextRepository;
 use Illuminate\Pagination\AbstractPaginator;
 
 class SysTextService implements SysTextInterface
 {
-    public function getList(SysTextSearchObject $object): AbstractPaginator
+    public function getList(SysTextSearchDTO $object): AbstractPaginator
     {
         return SysTextRepository::getListWithPagination($object);
     }
@@ -21,7 +21,7 @@ class SysTextService implements SysTextInterface
         return SysTextRepository::getRow($id);
     }
 
-    public function updateRow(SysTextUpdateObject $object)
+    public function updateRow(SysTextUpdateDTO $object)
     {
         return SysTextRepository::updateRow($object);
     }
@@ -31,7 +31,7 @@ class SysTextService implements SysTextInterface
         return SysTextRepository::deleteRow($id);
     }
 
-    public function storeRow(SysTextStoreObject $object)
+    public function storeRow(SysTextStoreDTO $object)
     {
         return SysTextRepository::storeRow($object);
     }

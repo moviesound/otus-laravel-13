@@ -3,9 +3,9 @@
 namespace App\Repositories;
 
 use App\Models\Bot\SysText;
-use App\Objects\SysTextSearchObject;
-use App\Objects\SysTextStoreObject;
-use App\Objects\SysTextUpdateObject;
+use App\DTO\SysTextStoreDTO;
+use App\DTO\SysTextUpdateDTO;
+use App\DTO\SysTextSearchDTO;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -26,10 +26,10 @@ class SysTextRepository
             ->orderByDesc('id');
     }
 
-    static public function getListWithPagination(SysTextSearchObject $object): AbstractPaginator
+    static public function getListWithPagination(SysTextSearchDTO $object): AbstractPaginator
     {
-        return self::getAllOrByAliasQuery($object->alias())
-            ->paginate($object->perPage())
+        return self::getAllOrByAliasQuery($object->alias)
+            ->paginate($object->perPage)
             ->onEachSide(2);
     }
 
@@ -38,34 +38,34 @@ class SysTextRepository
         return SysText::find($id);
     }
 
-    static public function updateRow(SysTextUpdateObject $object): bool
+    static public function updateRow(SysTextUpdateDTO $object): bool
     {
-        $text = SysText::find($object->id());
+        $text = SysText::find($object->id);
 
         if (!$text) {
             return false;
         }
 
         $text->update([
-            'alias' => $object->alias(),
-            'context' => $object->context(),
+            'alias' => $object->alias,
+            'context' => $object->context,
         ]);
 
         return true;
     }
 
-    static public function storeRow(SysTextStoreObject $object): bool
+    static public function storeRow(SysTextStoreDTO $object): bool
     {
-        $row = SysText::query()->byAlias($object->alias())->byLang($object->lang())->first();
+        $row = SysText::query()->byAlias($object->alias)->byLang($object->lang)->first();
 
         if (isset($row->context, $row->alias)) {
             return false;
         }
 
         SysText::query()->create([
-            'lang' => $object->lang(),
-            'alias' => $object->alias(),
-            'context' => $object->context()
+            'lang' => $object->lang,
+            'alias' => $object->alias,
+            'context' => $object->context
         ]);
 
         return true;

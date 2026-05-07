@@ -78,9 +78,17 @@
                 <th class="min-w-[300px] px-4 py-4 font-medium text-black dark:text-white">
                     Текст
                 </th>
+<<<<<<< HEAD
                 <th class="px-4 py-4 font-medium text-black dark:text-white">
                     Действия
                 </th>
+=======
+                @canany(['texts.update', 'texts.delete'])
+                <th class="px-4 py-4 font-medium text-black dark:text-white">
+                    Действия
+                </th>
+                @endcanany
+>>>>>>> 3431310 (add first part)
             </tr>
             </thead>
 
@@ -104,7 +112,11 @@
                     <td class="px-4 py-5">
                         {{ $text->context }}
                     </td>
+<<<<<<< HEAD
 
+=======
+                    @canany(['texts.update', 'texts.delete'])
+>>>>>>> 3431310 (add first part)
                     <td class="px-4 py-5">
                         <div x-data="{ open: false }" class="relative">
 
@@ -127,12 +139,33 @@
                                 border border-gray-200 bg-white shadow-lg dark:border-gray-700
                                 dark:bg-gray-800 z-50"
                             >
+<<<<<<< HEAD
                                 <a
                                     href="{{ route('texts.edit', $text->id) }}"
                                     @click.prevent="
                                         fetch($el.href)
                                         .then(r => r.json())
                                         .then(data => {
+=======
+                                @can('texts.update')
+                                <a
+                                    href="{{ route('texts.edit', $text->id) }}"
+                                    @click.prevent="
+                                        fetch($el.href, {
+                                            headers: {
+                                                'X-Requested-With': 'XMLHttpRequest',
+                                                'Accept': 'application/json',
+                                            }
+                                        })
+                                        .then(async (r) => {
+                                            const data = await r.json()
+
+                                            if (!r.ok) {
+                                                $store.modal.showAlert(data.message || 'У вас нет прав')
+                                                return
+                                            }
+
+>>>>>>> 3431310 (add first part)
                                             $store.modal.openModal(data.html)
                                         })
                                     "
@@ -141,7 +174,13 @@
                                 >
                                     Редактировать
                                 </a>
+<<<<<<< HEAD
 
+=======
+                                @endcan
+
+                                @can('texts.delete')
+>>>>>>> 3431310 (add first part)
                                 <form
                                     method="POST"
                                     action="{{ route('texts.delete', $text->id) }}"
@@ -157,11 +196,19 @@
                                         Удалить
                                     </button>
                                 </form>
+<<<<<<< HEAD
+=======
+                                @endcan
+>>>>>>> 3431310 (add first part)
                             </div>
 
                         </div>
                     </td>
+<<<<<<< HEAD
 
+=======
+                    @endcanany
+>>>>>>> 3431310 (add first part)
                 </tr>
             @endforeach
 
