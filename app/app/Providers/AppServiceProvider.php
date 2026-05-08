@@ -16,6 +16,11 @@ class AppServiceProvider extends ServiceProvider
             \App\Contracts\SysTextInterface::class,
             \App\Services\SysTextService::class
         );
+
+        $this->app->bind(
+            \App\Contracts\AdminInterface::class,
+            \App\Services\AdminService::class
+        );
     }
 
     /**

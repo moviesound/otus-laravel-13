@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Admin\Requests\AdminSearchRequest;
 use App\Http\Controllers\Admin\Requests\AdminStoreRequest;
 use App\Http\Controllers\Admin\Requests\AdminUpdateRequest;
+use App\Models\Permissions\Role;
 
 class AdminController extends Controller
 {
@@ -31,16 +32,18 @@ class AdminController extends Controller
         $admins = $this->adminService->getList($dto)
             ->appends($request->query());
 
-        return view('admins.index', compact('admins'));
+        return view('users.index', compact('admins'));
     }
 
     public function create()
     {
-        $roles = config('roles.options', []);
+        $roles = Role::query()
+            ->orderBy('name')
+            ->get();
 
         return response()->json([
             'status' => 'ok',
-            'html' => view('admins.partials.create', compact('roles'))->render()
+            'html' => view('users.partials.create', compact('roles'))->render()
         ]);
     }
 
@@ -80,12 +83,14 @@ class AdminController extends Controller
             ], 404);
         }
 
-        $roles = config('roles.options', []);
+        $roles = Role::query()
+            ->orderBy('name')
+            ->get();
 
         return response()->json([
             'status' => 'ok',
             'html' => view(
-                'admins.partials.edit',
+                'users.partials.edit',
                 compact('admin', 'roles')
             )->render()
         ]);

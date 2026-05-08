@@ -15,16 +15,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             DemoDataSeeder::class,
-<<<<<<< HEAD
-        ]);
-
-        Admin::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => Hash::make('test'),
-=======
             PermissionsSeeder::class,
->>>>>>> 3431310 (add first part)
         ]);
     }
 }

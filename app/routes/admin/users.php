@@ -4,34 +4,34 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminController;
 
 // список
-Route::get('/', [AdminController::class, 'index'])
+Route::get('/users', [AdminController::class, 'index'])
     ->middleware('permission:users.view')
     ->name('admins.index');
 
 // форма создания
-Route::get('/create', [AdminController::class, 'create'])
+Route::get('/users/create', [AdminController::class, 'create'])
     ->middleware('permission:users.create')
     ->name('admins.create');
 
 // создание
-Route::post('/', [AdminController::class, 'store'])
+Route::post('/users', [AdminController::class, 'store'])
     ->middleware('permission:users.create')
     ->name('admins.store');
 
 // форма редактирования
-Route::get('/edit/{id}', [AdminController::class, 'edit'])
+Route::get('/users/edit/{id}', [AdminController::class, 'edit'])
     ->middleware('permission:users.update')
     ->name('admins.edit');
 
 // обновление
-Route::put('/{id}', [AdminController::class, 'update'])
+Route::put('/users/{id}', [AdminController::class, 'update'])
     ->middleware('permission:users.update')
     ->name('admins.update');
 
 // сброс пароля
-Route::post('/reset-password/{id}', [AdminController::class, 'resetPassword'])
+Route::post('/users/password/{id}', [AdminController::class, 'resetPassword'])
     ->middleware('permission:users.password_change')
-    ->name('admins.reset-password');
+    ->name('admins.password');
 
 // удаление
 Route::delete('/delete/{id}', [AdminController::class, 'destroy'])

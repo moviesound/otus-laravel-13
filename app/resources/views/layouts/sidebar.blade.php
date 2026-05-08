@@ -10,11 +10,7 @@
     <nav class="px-4 py-4" x-data="{ selected: 'Texts' }">
         <ul class="flex flex-col gap-2">
 
-<<<<<<< HEAD
-            <!-- ONLY ITEM -->
-=======
             @can('texts.view')
->>>>>>> 3431310 (add first part)
             <li>
                 <a
                     href="/texts"
@@ -32,22 +28,14 @@
                     Тексты
                 </a>
             </li>
-<<<<<<< HEAD
-=======
             @endcan
 
             @can('texts.create')
->>>>>>> 3431310 (add first part)
             <li>
                 <button
                     type="button"
                     class="cursor-pointer flex items-center gap-3 rounded px-4 py-2 transition hover:bg-gray-800 w-full text-left"
                     @click="
-<<<<<<< HEAD
-            fetch('{{ route('texts.create') }}')
-                .then(r => r.json())
-                .then(data => $store.modal.openModal(data.html))
-=======
             fetch('{{ route('texts.create') }}', {
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',
@@ -64,7 +52,6 @@
 
                     $store.modal.openModal(data.html)
                 })
->>>>>>> 3431310 (add first part)
         "
                 >
 
@@ -75,9 +62,6 @@
                     </svg> Добавить текст
                 </button>
             </li>
-<<<<<<< HEAD
-
-=======
             @endcan
 
             @can('users.view')
@@ -104,7 +88,7 @@
                         type="button"
                         class="cursor-pointer flex items-center gap-3 rounded px-4 py-2 transition hover:bg-gray-800 w-full text-left"
                         @click="
-                        fetch('{{ route('users.create') }}', {
+                        fetch('{{ route('admins.create') }}', {
                             headers: {
                                 'X-Requested-With': 'XMLHttpRequest',
                                 'Accept': 'application/json',
@@ -122,6 +106,8 @@
                         })
                     "
                     >
+
+                        └──
                         <svg class="h-5 w-5 fill-current" viewBox="0 0 24 24">
                             <path d="M12 5v14m-7-7h14" stroke="currentColor" stroke-width="2"/>
                         </svg>
@@ -130,7 +116,6 @@
                     </button>
                 </li>
             @endcan
->>>>>>> 3431310 (add first part)
         </ul>
     </nav>
 </aside>

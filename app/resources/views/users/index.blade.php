@@ -77,6 +77,10 @@
                 </th>
 
                 <th class="min-w-[220px] px-4 py-4 font-medium text-black dark:text-white">
+                    Роль
+                </th>
+
+                <th class="min-w-[220px] px-4 py-4 font-medium text-black dark:text-white">
                     Права
                 </th>
 
@@ -91,7 +95,7 @@
 
             <tbody>
 
-            @foreach ($users as $user)
+            @foreach ($admins as $user)
 
                 <tr class="border-b border-stroke dark:border-strokedark">
 
@@ -109,15 +113,30 @@
 
                     <td class="px-4 py-5">
 
-                        <div class="flex flex-wrap gap-2">
+                        <div class="flex flex-col gap-2">
+                            <div class="flex flex-wrap gap-2">
+                                @foreach($user->roles as $role)
+                                    <span class="rounded bg-gray-200 px-2 py-1 text-xs dark:bg-gray-700">
+                                        role: {{ $role->name }}
+                                    </span>
+                                @endforeach
+                            </div>
 
-                            @foreach($user->roles as $role)
 
-                                <span class="rounded bg-gray-200 px-2 py-1 text-xs dark:bg-gray-700">
-                                    {{ $role->name }}
-                                </span>
+                        </div>
 
-                            @endforeach
+                    </td>
+
+                    <td class="px-4 py-5">
+
+                        <div class="flex flex-col gap-2">
+                            <div class="flex flex-wrap gap-2">
+                                @foreach($user->getAllPermissions() as $permission)
+                                    <span class="rounded bg-blue-100 px-2 py-1 text-xs text-blue-700 dark:bg-blue-900 dark:text-blue-200">
+                                        {{ $permission->name }}
+                                    </span>
+                                @endforeach
+                            </div>
 
                         </div>
 
@@ -153,7 +172,7 @@
                                     @can('users.update')
 
                                         <a
-                                            href="{{ route('users.edit', $user->id) }}"
+                                            href="{{ route('admins.edit', $user->id) }}"
                                             @click.prevent="
                                                 fetch($el.href, {
                                                     headers: {
@@ -183,32 +202,20 @@
                                     {{-- PASSWORD --}}
                                     @can('users.password_change')
 
-                                        <a
-                                            href="{{ route('users.password', $user->id) }}"
-                                            @click.prevent="
-                                                fetch($el.href, {
-                                                    headers: {
-                                                        'X-Requested-With': 'XMLHttpRequest',
-                                                        'Accept': 'application/json',
-                                                    }
-                                                })
-                                                .then(async (r) => {
-                                                    const data = await r.json()
-
-                                                    if (!r.ok) {
-                                                        $store.modal.showAlert(data.message || 'У вас нет прав')
-                                                        return
-                                                    }
-
-                                                    $store.modal.openModal(data.html)
-                                                })
-                                            "
-                                            class="w-full px-4 py-2 text-left text-sm
-                                            hover:bg-gray-100 dark:hover:bg-gray-700"
+                                        <form
+                                            method="POST"
+                                            action="{{ route('admins.password', $user->id) }}"
+                                            @submit.prevent="$store.modal.submit($event)"
                                         >
-                                            Сбросить пароль
-                                        </a>
+                                            @csrf
 
+                                            <button
+                                                type="submit"
+                                                class="cursor-pointer w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                                            >
+                                                Сбросить пароль
+                                            </button>
+                                        </form>
                                     @endcan
 
                                     {{-- DELETE --}}
@@ -216,7 +223,7 @@
 
                                         <form
                                             method="POST"
-                                            action="{{ route('users.delete', $user->id) }}"
+                                            action="{{ route('admins.delete', $user->id) }}"
                                             @submit.prevent="$store.modal.delete($event, {{ $user->id }})"
                                         >
                                             @csrf
@@ -252,7 +259,7 @@
                 <td colspan="5" class="px-4 py-4">
 
                     <div class="mt-4 flex justify-center">
-                        {{ $users->links('vendor.pagination.tailwind-smart') }}
+                        {{ $admins->links('vendor.pagination.tailwind-smart') }}
                     </div>
 
                 </td>

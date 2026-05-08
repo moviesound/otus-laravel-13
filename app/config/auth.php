@@ -16,13 +16,8 @@ return [
     */
 
     'defaults' => [
-<<<<<<< HEAD
-        'guard' => env('AUTH_GUARD', 'web'),
-        'passwords' => env('AUTH_PASSWORD_BROKER', 'admins'),
-=======
         'guard' => 'admin', //env('AUTH_GUARD', 'web'),
         'passwords' => 'admins', //env('AUTH_PASSWORD_BROKER', 'admins'),
->>>>>>> 3431310 (add first part)
     ],
 
     /*
@@ -100,11 +95,7 @@ return [
     'passwords' => [
         'admins' => [
             'provider' => 'admins',
-<<<<<<< HEAD
-            'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
-=======
             'table' => 'password_reset_tokens', //env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
->>>>>>> 3431310 (add first part)
             'expire' => 60,
             'throttle' => 60,
         ],
