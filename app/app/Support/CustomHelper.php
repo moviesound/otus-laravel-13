@@ -4,9 +4,26 @@ namespace App\Support;
 
 use Carbon\Carbon;
 use DateTimeInterface;
+use Illuminate\Support\Facades\Auth;
 
 class CustomHelper
 {
+    /**
+     * Check sys_texts rights of user
+     * @param string $action
+     * @return bool
+     */
+    public static function canText(string $action): bool
+    {
+        $user = Auth::guard('admin')->user();
+
+        if (!$user) {
+            return false;
+        }
+
+        return $user->can("texts.$action");
+    }
+
     public static function normalizeDate(mixed $date): DateTimeInterface
     {
         if ($date instanceof DateTimeInterface) {

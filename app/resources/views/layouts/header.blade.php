@@ -73,7 +73,7 @@
           </span>
 
                 <span class="lg:block text-sm">
-            Будущий профиль
+            {{ auth('admin')->user()?->email }}
           </span>
             </a>
 
@@ -82,10 +82,17 @@
                 x-show="dropdownOpen"
                 class="absolute right-0 mt-4 flex min-w-[150px] flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark"
             >
-                <a class="px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700" href="/profile">Профиль</a>
-                <button class="px-4 py-2 text-sm text-left hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
-                    Выйти
-                </button>
+
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+
+                    <button
+                        type="submit"
+                        class="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
+                    >
+                        Выйти
+                    </button>
+                </form>
             </div>
         </div>
 

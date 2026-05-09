@@ -78,9 +78,12 @@
                 <th class="min-w-[300px] px-4 py-4 font-medium text-black dark:text-white">
                     Текст
                 </th>
+
+                @canany(['texts.update', 'texts.delete'])
                 <th class="px-4 py-4 font-medium text-black dark:text-white">
                     Действия
                 </th>
+                @endcanany
             </tr>
             </thead>
 
@@ -105,6 +108,7 @@
                         {{ $text->context }}
                     </td>
 
+                    @canany(['texts.update', 'texts.delete'])
                     <td class="px-4 py-5">
                         <div x-data="{ open: false }" class="relative">
 
@@ -127,12 +131,23 @@
                                 border border-gray-200 bg-white shadow-lg dark:border-gray-700
                                 dark:bg-gray-800 z-50"
                             >
+                                @can('texts.update')
                                 <a
                                     href="{{ route('texts.edit', $text->id) }}"
                                     @click.prevent="
-                                        fetch($el.href)
-                                        .then(r => r.json())
-                                        .then(data => {
+                                        fetch($el.href, {
+                                            headers: {
+                                                'X-Requested-With': 'XMLHttpRequest',
+                                                'Accept': 'application/json',
+                                            }
+                                        })
+                                        .then(async (r) => {
+                                            const data = await r.json()
+
+                                            if (!r.ok) {
+                                                $store.modal.showAlert(data.message || 'У вас нет прав')
+                                                return
+                                            }
                                             $store.modal.openModal(data.html)
                                         })
                                     "
@@ -141,7 +156,9 @@
                                 >
                                     Редактировать
                                 </a>
+                                @endcan
 
+                                @can('texts.delete')
                                 <form
                                     method="POST"
                                     action="{{ route('texts.delete', $text->id) }}"
@@ -157,11 +174,12 @@
                                         Удалить
                                     </button>
                                 </form>
+                                @endcan
                             </div>
 
                         </div>
                     </td>
-
+                    @endcanany
                 </tr>
             @endforeach
 

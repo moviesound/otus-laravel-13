@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Contracts\SysTextInterface;
 use App\Http\Controllers\Controller;
+
 use App\DTO\SysTextSearchDTO;
 use App\DTO\SysTextStoreDTO;
 use App\DTO\SysTextUpdateDTO;
@@ -11,18 +12,21 @@ use App\Http\Controllers\Admin\Requests\SysTextSearchRequest;
 use App\Http\Controllers\Admin\Requests\SysTextStoreRequest;
 use App\Http\Controllers\Admin\Requests\SysTextUpdateRequest;
 
+use App\Objects\SysTextSearchObject;
+use App\Objects\SysTextStoreObject;
+use App\Objects\SysTextUpdateObject;
+use Illuminate\Http\Request;
+
+
 class SysTextController extends Controller
 {
 
-    public function __construct(
-        private SysTextInterface $sysTextService
-    )
-    {
-    }
+    public function __construct(private SysTextInterface $sysTextService){}
 
     /**
      * Display a listing of the resource.
      */
+
     public function index(SysTextSearchRequest $request)
     {
         $data = $request->toDTOArray();
@@ -32,7 +36,6 @@ class SysTextController extends Controller
             lang: $data['lang'],
             perPage: $data['perPage'],
         );
-
         $texts = $this->sysTextService->getList($dto)
             ->appends($request->query());
 
@@ -76,8 +79,8 @@ class SysTextController extends Controller
 
         return response()->json([
             'status' => 'ok',
-            'message' => 'Запись успешно добавлена. После закрытия сообщения страница обновится,
-            а запись появится в начале таблицы'
+            'message' => 'Запись успешно добавлена. После закрытия сообщения
+            страница обновится, а запись появится в начале таблицы'
         ]);
     }
 
