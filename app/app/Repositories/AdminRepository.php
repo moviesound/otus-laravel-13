@@ -6,98 +6,75 @@ use App\DTO\AdminSearchDTO;
 use App\DTO\AdminStoreDTO;
 use App\DTO\AdminUpdateDTO;
 use App\Models\Admin\Admin;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Pagination\AbstractPaginator;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Str;
 
 class AdminRepository
 {
-    /**
-     * Base Query
-     */
-    private static function getAllQuery(
-        ?string $name = null,
-        ?string $email = null
-    ): Builder {
-        return Admin::query()
-            ->with('roles')
-            ->when(
-                $name,
-                fn ($q) => $q->where('name', 'like', "%{$name}%")
-            )
-            ->when(
-                $email,
-                fn ($q) => $q->where('email', 'like', "%{$email}%")
-            )
-            ->orderByDesc('updated_at')
-            ->orderByDesc('id');
-    }
-
     public static function getListWithPagination(
-        AdminSearchDTO $object
-    ): AbstractPaginator {
-        return self::getAllQuery(
-            $object->name,
-            $object->email
-        )
-            ->paginate($object->perPage)
+        AdminSearchDTO $dto
+    ): LengthAwarePaginator {
+        return Admin::with('roles')
+            ->when(
+                $dto->name,
+                fn ($query) => $query->whereLike('name', "%{$dto->name}%")
+            )
+            ->when(
+                $dto->email,
+                fn ($query) => $query->whereLike('email', "%{$dto->email}%")
+            )
+            ->latest('updated_at')
+            ->latest('id')
+            ->paginate($dto->perPage)
             ->onEachSide(2);
     }
 
-    public static function getRow(int $id)
+    public static function getRow(int $id): ?Admin
     {
-        return Admin::query()
-            ->with('roles')
-            ->find($id);
+        return Admin::with('roles')->find($id);
     }
 
-    public static function storeRow(AdminStoreDTO $object): bool
+    public static function storeRow(AdminStoreDTO $dto): bool
     {
-        $exists = Admin::query()
-            ->where('email', $object->email)
+        if (Admin::where('email', $dto->email)->exists()) {
+            return false;
+        }
+
+        $password = Str::random(12);
+
+        $admin = Admin::create([
+            'name' => $dto->name,
+            'email' => $dto->email,
+            'password' => $password,
+        ]);
+
+        $admin->syncRoles($dto->roles);
+
+        return true;
+    }
+
+    public static function updateRow(AdminUpdateDTO $dto): bool
+    {
+        $admin = Admin::find($dto->id);
+
+        if (!$admin) {
+            return false;
+        }
+
+        $exists = Admin::where('email', $dto->email)
+            ->whereKeyNot($dto->id)
             ->exists();
 
         if ($exists) {
             return false;
         }
 
-        $password = Str::random(12);
-
-        $admin = Admin::query()->create([
-            'name' => $object->name,
-            'email' => $object->email,
-            'password' => Hash::make($password),
-        ]);
-
-        $admin->syncRoles($object->roles);
-
-        return true;
-    }
-
-    public static function updateRow(AdminUpdateDTO $object): bool
-    {
-        $admin = Admin::find($object->id);
-
-        if (!$admin) {
-            return false;
-        }
-
-        $emailExists = Admin::query()
-            ->where('email', $object->email)
-            ->where('id', '!=', $object->id)
-            ->exists();
-
-        if ($emailExists) {
-            return false;
-        }
-
         $admin->update([
-            'name' => $object->name,
-            'email' => $object->email,
+            'name' => $dto->name,
+            'email' => $dto->email,
         ]);
 
-        $admin->syncRoles($object->roles);
+        $admin->syncRoles($dto->roles);
 
         return true;
     }
@@ -126,7 +103,7 @@ class AdminRepository
         $password = Str::random(12);
 
         $admin->update([
-            'password' => Hash::make($password),
+            'password' => $password,
         ]);
 
         return $password;
