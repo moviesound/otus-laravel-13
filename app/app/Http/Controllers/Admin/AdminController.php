@@ -6,11 +6,11 @@ use App\Contracts\AdminInterface;
 use App\DTO\AdminSearchDTO;
 use App\DTO\AdminStoreDTO;
 use App\DTO\AdminUpdateDTO;
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\Admin\Requests\AdminSearchRequest;
 use App\Http\Controllers\Admin\Requests\AdminStoreRequest;
 use App\Http\Controllers\Admin\Requests\AdminUpdateRequest;
-use App\Models\Permissions\Role;
+use App\Http\Controllers\Controller;
+use App\Models\Admin\Role;
 
 class AdminController extends Controller
 {

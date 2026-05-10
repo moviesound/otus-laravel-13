@@ -3,10 +3,10 @@
 namespace Database\Seeders;
 
 use App\Models\Admin\Admin;
+use App\Models\Admin\Permission;
+use App\Models\Admin\Role;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use App\Models\Permissions\Role;
-use App\Models\Permissions\Permission;
 use Spatie\Permission\PermissionRegistrar;
 
 class PermissionsSeeder extends Seeder

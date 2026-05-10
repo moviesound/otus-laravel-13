@@ -18,6 +18,7 @@ class Admin extends Authenticatable
     /** @use HasFactory<AdminFactory> */
     use HasFactory, Notifiable, HasRoles;
     protected $connection = 'admin';
+    protected string $guard_name = 'admin';
 
     /**
      * Get the attributes that should be cast.
