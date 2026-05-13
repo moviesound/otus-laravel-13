@@ -8,7 +8,3 @@ Route::get('/login', [AuthController::class, 'show'])
 
 Route::post('/login', [AuthController::class, 'login'])
     ->name('login.attempt');
-
-Route::get('/', function () {
-    return redirect('/login');
-});

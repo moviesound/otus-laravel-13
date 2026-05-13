@@ -33,11 +33,6 @@ class Reminder extends Model
         return $this->belongsTo(ReminderTemplate::class, 'template_id');
     }
 
-    public function commonEntityReminders(): HasMany
-    {
-        return $this->hasMany(CommonEntityReminder::class, 'child_id');
-    }
-
     public function reminderQueues(): HasMany
     {
         return $this->hasMany(ReminderQueue::class, 'reminder_id');
@@ -46,13 +41,13 @@ class Reminder extends Model
     /* Scopes */
 
     #[Scope]
-    public function byTplId(Builder $query, int $templateId): Builder
+    protected function byTplId(Builder $query, int $templateId): Builder
     {
         return $query->where('template_id', $templateId);
     }
 
     #[Scope]
-    public function byStatus(Builder $query, ?string $status): Builder
+    protected function byStatus(Builder $query, ?string $status): Builder
     {
         return $status
             ? $query->where('status', $status)
@@ -60,7 +55,7 @@ class Reminder extends Model
     }
 
     #[Scope]
-    public function whereDateRemindAfter(Builder $query, mixed $date): Builder
+    protected function whereDateRemindAfter(Builder $query, mixed $date): Builder
     {
         if (!$date) {
             return $query;
@@ -70,7 +65,7 @@ class Reminder extends Model
     }
 
     #[Scope]
-    public function whereDateRemindBefore(Builder $query, mixed $date): Builder
+    protected function whereDateRemindBefore(Builder $query, mixed $date): Builder
     {
         if (!$date) {
             return $query;
@@ -80,7 +75,7 @@ class Reminder extends Model
     }
 
     #[Scope]
-    public function scopeUpcoming(Builder $query): Builder
+    protected function scopeUpcoming(Builder $query): Builder
     {
         return $query
             ->whereNotNull('date_remind')
@@ -88,7 +83,7 @@ class Reminder extends Model
     }
 
     #[Scope]
-    public function scopeOverdue(Builder $query): Builder
+    protected function scopeOverdue(Builder $query): Builder
     {
         return $query
             ->whereNotNull('date_remind')

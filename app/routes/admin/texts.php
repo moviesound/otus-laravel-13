@@ -14,7 +14,7 @@ Route::put('/texts/{id}', [SysTextController::class, 'update'])
     ->name('texts.update')
     ->middleware('permission:texts.update');
 
-Route::delete('/texts/delete/{id}', [SysTextController::class, 'destroy'])
+Route::delete('/texts/{id}', [SysTextController::class, 'destroy'])
     ->name('texts.delete')
     ->middleware('permission:texts.delete');
 

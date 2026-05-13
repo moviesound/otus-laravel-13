@@ -135,21 +135,16 @@
                                 <a
                                     href="{{ route('texts.edit', $text->id) }}"
                                     @click.prevent="
-                                        fetch($el.href, {
-                                            headers: {
-                                                'X-Requested-With': 'XMLHttpRequest',
-                                                'Accept': 'application/json',
-                                            }
-                                        })
-                                        .then(async (r) => {
-                                            const data = await r.json()
+                                        apiFetch($el.href)
+                                            .then(({ res, data }) => {
 
-                                            if (!r.ok) {
-                                                $store.modal.showAlert(data.message || 'У вас нет прав')
-                                                return
-                                            }
-                                            $store.modal.openModal(data.html)
-                                        })
+                                                if (!res.ok) {
+                                                    $store.modal.showAlert(data.message || 'У вас нет прав')
+                                                    return
+                                                }
+
+                                                $store.modal.openModal(data.html)
+                                            })
                                     "
                                     class="w-full px-4 py-2 text-left text-sm hover:bg-gray-100
                                     dark:hover:bg-gray-700"

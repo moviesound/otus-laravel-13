@@ -5,12 +5,12 @@ namespace App\Models\Bot;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 #[Fillable([
-    'user_socials_id',
-    'socials_type',
+    'user_social_id',
     'scenario',
     'step',
     'message',
@@ -21,6 +21,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 ])]
 class Step extends Model
 {
+    use HasFactory;
+
     protected $table = 'steps';
     protected $primaryKey = 'user_social_id';
     public $incrementing = false;
@@ -41,19 +43,19 @@ class Step extends Model
     }
 
     #[Scope]
-    public function byScenario(Builder $query, string $scenario): Builder
+    protected function byScenario(Builder $query, string $scenario): Builder
     {
         return $query->where('scenario', $scenario);
     }
 
     #[Scope]
-    public function byStep(Builder $query, string $step): Builder
+    protected function byStep(Builder $query, string $step): Builder
     {
         return $query->where('step', $step);
     }
 
     #[Scope]
-    public function byCommonEntityId(Builder $query, ?int $entityId): Builder
+    protected function byCommonEntityId(Builder $query, ?int $entityId): Builder
     {
         return $entityId
             ? $query->where('common_entity_id', $entityId)

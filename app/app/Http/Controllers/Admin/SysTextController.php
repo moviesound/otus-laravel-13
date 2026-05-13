@@ -74,7 +74,7 @@ class SysTextController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Такой alias существует'
-            ], 404);
+            ], 409);
         }
 
         return response()->json([

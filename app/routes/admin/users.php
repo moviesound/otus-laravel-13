@@ -34,6 +34,6 @@ Route::post('/users/password/{id}', [AdminController::class, 'resetPassword'])
     ->name('admins.password');
 
 // удаление
-Route::delete('/delete/{id}', [AdminController::class, 'destroy'])
+Route::delete('/users/{id}', [AdminController::class, 'destroy'])
     ->middleware('permission:users.delete')
     ->name('admins.delete');

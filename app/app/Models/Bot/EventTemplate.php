@@ -170,12 +170,4 @@ class EventTemplate extends Model
             [$text]
         );
     }
-
-
-    /* Helpers */
-
-    public function getRepeated(): bool
-    {
-        return $this->repeat_type !== 'none';
-    }
 }

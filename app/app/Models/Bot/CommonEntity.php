@@ -37,27 +37,16 @@ class CommonEntity extends Model
         );
     }
 
-    public function reminders(): BelongsToMany
-    {
-        return $this->belongsToMany(
-            ReminderTemplate::class,
-            'common_entity_reminder',
-            'entity_id',
-            'child_id'
-        );
-    }
-
     public function steps(): HasMany
     {
         return $this->hasMany(Step::class, 'common_entity_id');
     }
 
-    public function relationType(string $type): HasMany
+    public function relationType(string $type): BelongsToMany
     {
         return match ($type) {
             'task' => $this->tasks(),
             'event' => $this->events(),
-            'reminder' => $this->reminders(),
             default => throw new \InvalidArgumentException("Unknown type: {$type}")
         };
     }
@@ -67,15 +56,12 @@ class CommonEntity extends Model
     public function attach(string $type, int $childId): void
     {
         $this->relationType($type)
-            ->firstOrCreate([
-                'child_id' => $childId,
-            ]);
+            ->attach($childId);
     }
 
     public function detach(string $type, int $childId): void
     {
         $this->relationType($type)
-            ->where('child_id', $childId)
-            ->delete();
+            ->detach($childId);
     }
 }

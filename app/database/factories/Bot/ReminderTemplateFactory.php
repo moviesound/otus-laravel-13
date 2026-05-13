@@ -58,4 +58,18 @@ class ReminderTemplateFactory extends Factory
             'user_id' => $template->user_id,
         ]);
     }
+
+    public function subTask(): static
+    {
+        return $this->state(fn () => [
+            'is_sub_task' => 1,
+        ]);
+    }
+
+    public function mainTask(): static
+    {
+        return $this->state(fn () => [
+            'is_sub_task' => 0,
+        ]);
+    }
 }

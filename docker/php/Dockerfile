@@ -11,10 +11,11 @@ RUN apt-get update && apt-get install -y \
     nodejs npm \
     && docker-php-ext-install \
         pdo pdo_mysql mbstring xml intl bcmath gd zip \
-    && pecl install redis \
-    && docker-php-ext-enable redis \
+    && pecl install redis xdebug \
+    && docker-php-ext-enable redis xdebug \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
 
 #RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
 

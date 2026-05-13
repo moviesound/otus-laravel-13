@@ -174,16 +174,11 @@
                                         <a
                                             href="{{ route('admins.edit', $user->id) }}"
                                             @click.prevent="
-                                                fetch($el.href, {
-                                                    headers: {
-                                                        'X-Requested-With': 'XMLHttpRequest',
-                                                        'Accept': 'application/json',
-                                                    }
-                                                })
-                                                .then(async (r) => {
-                                                    const data = await r.json()
 
-                                                    if (!r.ok) {
+                                            apiFetch($el.href)
+                                                .then(({ res, data }) => {
+
+                                                    if (!res.ok) {
                                                         $store.modal.showAlert(data.message || 'У вас нет прав')
                                                         return
                                                     }

@@ -48,7 +48,7 @@ class ReminderTemplate extends Model
     /* Scopes */
 
     #[Scope]
-    public function byUserId(Builder $query, ?int $userId): Builder
+    protected function byUserId(Builder $query, ?int $userId): Builder
     {
         return $userId
             ? $query->where('user_id', $userId)
@@ -56,7 +56,7 @@ class ReminderTemplate extends Model
     }
 
     #[Scope]
-    public function byEntityId(Builder $query, string $type, ?int $id = null): Builder
+    protected function byEntityId(Builder $query, string $type, ?int $id = null): Builder
     {
         return $query
             ->where('entity_type', $type)
@@ -64,13 +64,13 @@ class ReminderTemplate extends Model
     }
 
     #[Scope]
-    public function searchText(Builder $query, string $text): Builder
+    protected function searchText(Builder $query, string $text): Builder
     {
-        return $query->whereFullText('text', $text);
+        return $query->whereFullText('text', $text, ['mode' => 'boolean']);
     }
 
     #[Scope]
-    public function isSubTask(Builder $query): Builder
+    protected function isSubTask(Builder $query): Builder
     {
         return $query->where('is_sub_task', 1);
     }

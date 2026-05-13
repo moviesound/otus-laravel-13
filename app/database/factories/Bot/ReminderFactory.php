@@ -3,7 +3,7 @@
 namespace Database\Factories\Bot;
 
 use App\Models\Bot\Reminder;
-use App\Models\Bot\TaskTemplate;
+use App\Models\Bot\ReminderTemplate;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -28,7 +28,7 @@ class ReminderFactory extends Factory
         $now = now();
 
         return [
-            'template_id' => TaskTemplate::factory(),
+            'template_id' => ReminderTemplate::factory(),
 
             'date_remind' => $this->faker->optional()->dateTimeBetween('now', '+7 days'),
 
