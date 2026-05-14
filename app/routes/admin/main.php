@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Bot\ReminderTemplate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,6 +15,9 @@ Route::middleware('auth:admin')->group(function () {
 
     require base_path('routes/admin/users.php');
 
+    Route::get('/test-error', function () {
+       return 'error generated';
+    })->middleware('permission:users.create');
 
     Route::post('/logout', function () {
         Auth::guard('admin')->logout();
@@ -24,14 +28,6 @@ Route::middleware('auth:admin')->group(function () {
         return redirect('/login');
     })->name('logout');
 
-});
-
-Route::get('test', function () {
-    $result = ReminderTemplate::query()
-        ->searchText('client')
-        ->get();
-
-    return $result;
 });
 
 //Route::get('/', function () {
