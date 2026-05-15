@@ -172,10 +172,10 @@ class TaskTemplate extends Model
     #[Scope]
     protected function search(Builder $query, string $text)
     {
-        return $query->whereRaw(
-            "MATCH(title, description) AGAINST(? IN NATURAL LANGUAGE MODE)",
-            [$text]
-        );
+        return $query->where(function ($q) use ($text) {
+            $q->whereFullText('title', $text, ['mode' => 'boolean'])
+                ->orWhereFullText('description', $text, ['mode' => 'boolean']);
+        });
     }
 
     /* Helpers */

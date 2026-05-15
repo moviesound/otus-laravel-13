@@ -130,25 +130,4 @@ class Event extends Model
         return $query->where('next_system_remind_at', '>=', CustomHelper::normalizeDate($date));
     }
 
-    /* Helpers */
-
-    public function getDone(): bool
-    {
-        return $this->status === 'done';
-    }
-
-    public function getOverdue(): bool
-    {
-        return $this->status === 'overdue';
-    }
-
-    public function getActive(): bool
-    {
-        return in_array($this->status, ['pending', 'processing']);
-    }
-
-    public function getCanceled(): bool
-    {
-        return $this->status === 'canceled';
-    }
 }

@@ -6,6 +6,7 @@ use App\Support\CustomHelper;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -14,11 +15,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'tariff_id',
     'status',
     'date_start',
-    'date_end',
-    'auto_prolong',
+    'date_stop',
+    'autoprolong',
 ])]
 class UserTariff extends Model
 {
+    use HasFactory;
+
     protected $table = 'user_tariffs';
 
     public $timestamps = false;
@@ -29,9 +32,9 @@ class UserTariff extends Model
         'status' => 'integer',
 
         'date_start' => 'datetime',
-        'date_end' => 'datetime',
+        'date_stop' => 'datetime',
 
-        'auto_prolong' => 'integer',
+        'autoprolong' => 'integer',
     ];
 
     /* Relations */
@@ -61,15 +64,9 @@ class UserTariff extends Model
     }
 
     #[Scope]
-    protected function byStatus(Builder $query, int $status)
-    {
-        return $query->where('status', $status);
-    }
-
-    #[Scope]
     protected function isExpired(Builder $query)
     {
-        return $query->where('date_end', '<', now());
+        return $query->where('date_stop', '<', now());
     }
 
     #[Scope]
@@ -87,20 +84,27 @@ class UserTariff extends Model
     #[Scope]
     protected function whereEndAfter(Builder $query, mixed $date)
     {
-        return $query->where('date_end', '>=', CustomHelper::normalizeDate($date));
+        return $query->where('date_stop', '>=', CustomHelper::normalizeDate($date));
     }
 
     #[Scope]
     protected function whereEndBefore(Builder $query, mixed $date)
     {
-        return $query->where('date_end', '<=', CustomHelper::normalizeDate($date));
+        return $query->where('date_stop', '<=', CustomHelper::normalizeDate($date));
     }
 
     #[Scope]
     protected function isCurrentTariff(Builder $query)
     {
-        return $query->where('date_start', '<=', now())
-            ->where('date_end', '>=', now());
+        return $query
+            ->where('date_start', '<=', now())
+            ->where('date_stop', '>=', now());
     }
 
+    // Helpers
+    public function isActive(): bool
+    {
+        return $this->date_start <= now()
+            && ($this->date_stop === null || $this->date_stop >= now());
+    }
 }

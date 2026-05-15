@@ -17,7 +17,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'mariadb'),
+    'default' => env('DB_CONNECTION_MAIN', 'main'),
 
     /*
     |--------------------------------------------------------------------------
@@ -44,17 +44,17 @@ return [
             'transaction_mode' => 'DEFERRED',
         ],*/
 
-        'mariadb' => [
+        'main' => [
             'driver' => 'mariadb',
-            'url' => env('DB_URL'),
-            'host' => env('DB_HOST', '127.0.0.1'),
-            'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'laravel'),
-            'username' => env('DB_USERNAME', 'root'),
-            'password' => env('DB_PASSWORD', ''),
-            'unix_socket' => env('DB_SOCKET', ''),
-            'charset' => env('DB_CHARSET', 'utf8mb4'),
-            'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),
+            'url' => env('DB_URL_MAIN'),
+            'host' => env('DB_HOST_MAIN', '127.0.0.1'),
+            'port' => env('DB_PORT_MAIN', '3306'),
+            'database' => env('DB_DATABASE_MAIN', 'laravel'),
+            'username' => env('DB_USERNAME_MAIN', 'root'),
+            'password' => env('DB_PASSWORD_MAIN', ''),
+            'unix_socket' => env('DB_SOCKET_MAIN', ''),
+            'charset' => env('DB_CHARSET_MAIN', 'utf8mb4'),
+            'collation' => env('DB_COLLATION_MAIN', 'utf8mb4_unicode_ci'),
             'prefix' => '',
             'prefix_indexes' => true,
             'strict' => true,

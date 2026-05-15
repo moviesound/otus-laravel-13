@@ -63,7 +63,7 @@ class AdminController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Пользователь уже существует'
-            ], 404);
+            ], 409);
         }
 
         return response()->json([

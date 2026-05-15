@@ -218,4 +218,7 @@ return [
 
         'store' => 'default',
     ],
+    'defaults' => [
+        'guard' => 'admin',
+    ]
 ];

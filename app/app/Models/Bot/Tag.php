@@ -50,10 +50,7 @@ class Tag extends Model
     #[Scope]
     protected function searchByTag(Builder $query, string $text)
     {
-        return $query->whereRaw(
-            "MATCH(tag) AGAINST(? IN NATURAL LANGUAGE MODE)",
-            [$text]
-        );
+        return $query->whereFullText('tag', $text, ['mode' => 'boolean']);
     }
 
     #[Scope]

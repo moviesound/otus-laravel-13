@@ -5,6 +5,7 @@ namespace App\Models\Bot;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
@@ -29,6 +30,7 @@ use Illuminate\Support\Facades\Cache;
 ])]
 class SysText extends Model
 {
+    use HasFactory;
     protected $table = 'sys_texts';
 
     const TAG = 'sys_text';

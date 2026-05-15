@@ -5,14 +5,17 @@ namespace App\Models\Bot;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Testing\Fluent\Concerns\Has;
 
 #[Fillable([
     'task_template_id', 'tag_id', 'created_at',
 ])]
 class TagTask extends Model
 {
+    use HasFactory;
     protected $table = 'tag_task';
 
     public $timestamps = false;

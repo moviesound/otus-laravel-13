@@ -5,6 +5,7 @@ namespace App\Models\Bot;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -25,6 +26,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 ])]
 class ReminderQueue extends Model
 {
+    use HasFactory;
 
     protected $table = 'reminder_queues';
 
@@ -55,7 +57,7 @@ class ReminderQueue extends Model
     /* Scopes */
 
     #[Scope]
-    public function byStatus(Builder $query, ?string $status): Builder
+    protected function byStatus(Builder $query, ?string $status): Builder
     {
         return $status
             ? $query->where('status', $status)
@@ -63,25 +65,25 @@ class ReminderQueue extends Model
     }
 
     #[Scope]
-    public function isPending(Builder $query): Builder
+    protected function isPending(Builder $query): Builder
     {
         return $query->where('status', 'pending');
     }
 
     #[Scope]
-    public function isProcessing(Builder $query): Builder
+    protected function isProcessing(Builder $query): Builder
     {
         return $query->where('status', 'processing');
     }
 
     #[Scope]
-    public function isFailed(Builder $query): Builder
+    protected function isFailed(Builder $query): Builder
     {
         return $query->where('status', 'failed');
     }
 
     #[Scope]
-    public function byChannel(Builder $query, ?string $channel): Builder
+    protected function byChannel(Builder $query, ?string $channel): Builder
     {
         return $channel
             ? $query->where('channel', $channel)
@@ -89,7 +91,7 @@ class ReminderQueue extends Model
     }
 
     #[Scope]
-    public function byUserId(Builder $query, ?int $userId): Builder
+    protected function byUserId(Builder $query, ?int $userId): Builder
     {
         return $userId
             ? $query->where('user_id', $userId)

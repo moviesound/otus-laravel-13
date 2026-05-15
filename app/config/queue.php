@@ -103,7 +103,7 @@ return [
     */
 
     'batching' => [
-        'database' => env('DB_CONNECTION', 'sqlite'),
+        'database' => env('DB_CONNECTION_MAIN', 'main'),
         'table' => 'job_batches',
     ],
 

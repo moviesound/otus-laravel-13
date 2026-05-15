@@ -15,6 +15,9 @@ class AuthController extends Controller
      */
     public function show()
     {
+        if (Auth::guard('admin')->check()) {
+            return redirect('/texts');
+        }
         return view('guest.login');
     }
 
@@ -35,9 +38,11 @@ class AuthController extends Controller
             return redirect()->intended('/texts');
         }
 
-        return back()->withErrors([
-            'email' => 'Неверный email или пароль',
-        ])->onlyInput('email');
+        return redirect()->route('login')
+            ->withErrors([
+                'email' => 'Неверный email или пароль',
+            ])
+            ->withInput($request->only('email'));
     }
 
     /**
