@@ -55,7 +55,7 @@ return [
         'stack' => [
             'driver' => 'stack',
             'channels' => ['telegram', 'daily'],
-            'ignore_exceptions' => true,
+            'ignore_exceptions' => env('LOG_IGNORE_EXCEPTIONS', true),
         ],
 
         'single' => [
@@ -130,13 +130,15 @@ return [
         'telegram' => [
             'driver' => 'monolog',
             'handler' => Monolog\Handler\TelegramBotHandler::class,
-            'level' => 'error',
+            'level' => env('LOG_TELEGRAM_LEVEL', 'error'),
 
             'handler_with' => [
                 'apiKey' => env('TELEGRAM_KEY'),
                 'channel' => env('TELEGRAM_CHAT_ID'),
-                'level' => 'error',//https://t.me/otuslaraveleduerrorlevel
+                'parseMode' => 'HTML',
             ],
+
+            'formatter' =>  App\Support\Logging\TelegramPrettyFormatter::class,
         ],
 
     ],

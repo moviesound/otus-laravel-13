@@ -16,7 +16,13 @@ Route::middleware('auth:admin')->group(function () {
     require base_path('routes/admin/users.php');
 
     Route::get('/test-error', function () {
-       return 'error generated';
+        0/0;
+        return 'error generated';
+    })->middleware('permission:users.create');
+
+    Route::get('/test-error-custom', function () {
+        throw new Exception('test error custom via Exception');
+        return 'error generated';
     })->middleware('permission:users.create');
 
     Route::post('/logout', function () {
