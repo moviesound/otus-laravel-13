@@ -54,8 +54,8 @@ return [
 
         'stack' => [
             'driver' => 'stack',
-            'channels' => explode(',', (string) env('LOG_STACK', 'single')),
-            'ignore_exceptions' => false,
+            'channels' => ['telegram', 'daily'],
+            'ignore_exceptions' => env('LOG_IGNORE_EXCEPTIONS', true),
         ],
 
         'single' => [
@@ -124,7 +124,21 @@ return [
         ],
 
         'emergency' => [
-            'path' => storage_path('logs/laravel.log'),
+            'path' => storage_path('logs/emergency.log'),
+        ],
+
+        'telegram' => [
+            'driver' => 'monolog',
+            'handler' => Monolog\Handler\TelegramBotHandler::class,
+            'level' => env('LOG_TELEGRAM_LEVEL', 'error'),
+
+            'handler_with' => [
+                'apiKey' => env('TELEGRAM_KEY'),
+                'channel' => env('TELEGRAM_CHAT_ID'),
+                'parseMode' => 'HTML',
+            ],
+
+            'formatter' =>  App\Support\Logging\TelegramPrettyFormatter::class,
         ],
 
     ],
