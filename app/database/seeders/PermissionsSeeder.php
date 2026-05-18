@@ -29,6 +29,9 @@ class PermissionsSeeder extends Seeder
             'users.update',
             'users.password_change',
             'users.delete',
+
+            // logs
+            'logs.view',
         ];
 
         foreach ($permissions as $permission) {

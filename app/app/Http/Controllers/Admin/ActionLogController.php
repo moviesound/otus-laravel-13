@@ -2,46 +2,18 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\DTO\ActionLogSearchDTO;
-use App\DTO\ActionLogStoreDTO;
-use App\Http\Controllers\Admin\Requests\AdminLogSearchRequest;
-use App\Http\Controllers\Admin\Requests\AdminLogStoreRequest;
-use App\Http\Controllers\Controller;
-use App\Repositories\ActionLogRepository;
+use App\Http\Controllers\Admin\Requests\ActionLogSearchRequest;
+use App\Models\Admin\ActionLog;
 
-class ActionLogController extends Controller
+class ActionLogController
 {
-    public function index(AdminLogSearchRequest $request)
+    public function index(ActionLogSearchRequest $request)
     {
-        $data = $request->toDTOArray();
+        $logs = ActionLog::query()
+            ->latest()
+            ->paginate(30)
+            ->withQueryString();
 
-        $dto = new ActionLogSearchDTO(
-            search: $data['search'],
-            userId: $data['userId'],
-            perPage: $data['perPage'],
-        );
-
-        $logs = ActionLogRepository::getListWithPagination($dto);
-
-        return view('admin.logs', compact('logs'));
-    }
-
-    public function store(AdminLogStoreRequest $request)
-    {
-        $data = $request->toDTOArray();
-
-        $dto = new ActionLogStoreDTO(
-            userId: $data['userId'],
-            action: $data['action'],
-            ip: $data['ip'],
-            userAgent: $data['userAgent'],
-        );
-
-        $log = ActionLogRepository::storeRow($dto);
-
-        return response()->json([
-            'status' => 'ok',
-            'log_id' => $log->_id,
-        ]);
+        return view('logs.index', compact('logs'));
     }
 }

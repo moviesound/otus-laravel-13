@@ -15,6 +15,8 @@ Route::middleware(['auth:admin', 'admin.log'])->group(function () {
 
     require base_path('routes/admin/users.php');
 
+    require base_path('routes/admin/logs.php');
+
     Route::get('/test-error', function () {
         0/0;
         return 'error generated';

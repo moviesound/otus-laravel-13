@@ -29,7 +29,7 @@ Route::put('/users/{id}', [AdminController::class, 'update'])
     ->name('admins.update');
 
 // сброс пароля
-Route::post('/users/password/{id}', [AdminController::class, 'resetPassword'])
+Route::patch('/users/password/{id}', [AdminController::class, 'resetPassword'])
     ->middleware('permission:users.password_change')
     ->name('admins.password');
 

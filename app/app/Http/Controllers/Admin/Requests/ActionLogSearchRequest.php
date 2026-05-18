@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AdminLogSearchRequest extends FormRequest
+class ActionLogSearchRequest extends FormRequest
 {
     public function rules(): array
     {

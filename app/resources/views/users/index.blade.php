@@ -203,6 +203,7 @@
                                             @submit.prevent="$store.modal.submit($event)"
                                         >
                                             @csrf
+                                            @method("PATCH")
 
                                             <button
                                                 type="submit"
