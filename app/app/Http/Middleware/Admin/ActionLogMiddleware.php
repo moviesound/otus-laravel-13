@@ -43,10 +43,10 @@ class ActionLogMiddleware
         $itemId = $response->headers->get('X-ITEM-ID') ?? 'unknown';
 
         $result = match ($method) {
-            'POST' => "CREATED:{$object}:ITEM_ID={$itemId}",
-            'PUT', 'PATCH' => "UPDATED:{$object}:ITEM_ID={$itemId}",
-            'DELETE' => "DELETED:{$object}:ITEM_ID={$itemId}",
-            default => "UNKNOWN:{$object}:ITEM_ID={$itemId}",
+            'POST' => "CREATED:{$object}:ITEM_ID:{$itemId}",
+            'PUT', 'PATCH' => "UPDATED:{$object}:ITEM_ID:{$itemId}",
+            'DELETE' => "DELETED:{$object}:ITEM_ID:{$itemId}",
+            default => "UNKNOWN:{$object}:ITEM_ID:{$itemId}",
         };
 
         return $result;
