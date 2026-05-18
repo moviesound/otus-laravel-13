@@ -2,17 +2,29 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Contracts\ActionLogInterface;
+use App\DTO\ActionLogSearchDTO;
 use App\Http\Controllers\Admin\Requests\ActionLogSearchRequest;
-use App\Models\Admin\ActionLog;
 
 class ActionLogController
 {
+    public function __construct(
+        private ActionLogInterface $actionLogService
+    ) {}
+
     public function index(ActionLogSearchRequest $request)
     {
-        $logs = ActionLog::query()
-            ->latest()
-            ->paginate(30)
-            ->withQueryString();
+        $data = $request->toDTOArray();
+
+        $dto = new ActionLogSearchDTO(
+            search: $data['search'] ?? null,
+            userId: $data['userId'] ?? null,
+            perPage: $data['perPage'] ?? 30,
+        );
+
+        $logs = $this->actionLogService
+            ->getList($dto)
+            ->appends($request->query());
 
         return view('logs.index', compact('logs'));
     }
