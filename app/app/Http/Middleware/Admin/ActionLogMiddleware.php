@@ -2,8 +2,7 @@
 
 namespace App\Http\Middleware\Admin;
 
-use App\DTO\ActionLogStoreDTO;
-use App\Repositories\ActionLogRepository;
+use App\Contracts\ActionLogInterface;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,13 +20,11 @@ class ActionLogMiddleware
         $response = $next($request);
 
         if ($request->user()) {
-            ActionLogRepository::storeRow(
-                new ActionLogStoreDTO(
-                    userId: $request->user()->id,
-                    action: $this->resolveAction($request, $response),
-                    ip: $request->ip(),
-                    userAgent: $request->userAgent(),
-                )
+            app(ActionLogInterface::class)->store(
+                action: $this->resolveAction($request, $response),
+                userId: $request->user('admin')->id,
+                ip: $request->ip(),
+                userAgent: $request->userAgent(),
             );
         }
 

@@ -18,6 +18,11 @@ class AppServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            \App\Contracts\ActionLogInterface::class,
+            \App\Services\ActionLogService::class
+        );
+
+        $this->app->bind(
             \App\Contracts\AdminInterface::class,
             \App\Services\AdminService::class
         );
