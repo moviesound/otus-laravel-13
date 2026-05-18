@@ -9,7 +9,7 @@ Route::middleware('guest:admin')->group(function () {
     require base_path('routes/admin/guests.php');
 });
 
-Route::middleware('auth:admin')->group(function () {
+Route::middleware(['auth:admin', 'admin.log'])->group(function () {
 
     require base_path('routes/admin/texts.php');
 

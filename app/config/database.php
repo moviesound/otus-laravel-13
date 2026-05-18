@@ -77,6 +77,18 @@ return [
             'strict' => true,
         ],
 
+        'mongodb_logs' => [
+            'driver' => 'mongodb',
+            'dsn' => env('MONGODB_LOGS_URI', 'mongodb://mongodb:27017'),
+            'database' => env('MONGODB_LOGS_DATABASE', 'chatbot_logs'),
+        ],
+
+        'mongodb_admin' => [
+            'driver' => 'mongodb',
+            'dsn' => env('MONGODB_ADMIN_URI', 'mongodb://mongodb:27017'),
+            'database' => env('MONGODB_ADMIN_DATABASE', 'admin'),
+        ],
+
     ],
 
     /*

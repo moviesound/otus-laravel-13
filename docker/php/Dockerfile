@@ -11,8 +11,8 @@ RUN apt-get update && apt-get install -y \
     nodejs npm \
     && docker-php-ext-install \
         pdo pdo_mysql mbstring xml intl bcmath gd zip \
-    && pecl install redis xdebug \
-    && docker-php-ext-enable redis xdebug \
+    && pecl install redis xdebug mongodb \
+    && docker-php-ext-enable redis xdebug mongodb \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

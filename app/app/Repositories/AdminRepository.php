@@ -5,6 +5,8 @@ namespace App\Repositories;
 use App\DTO\AdminSearchDTO;
 use App\DTO\AdminStoreDTO;
 use App\DTO\AdminUpdateDTO;
+use App\Exceptions\AdminNotFoundException;
+use App\Exceptions\DuplicateAdminException;
 use App\Models\Admin\Admin;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Str;
@@ -29,15 +31,23 @@ class AdminRepository
             ->onEachSide(2);
     }
 
-    public static function getRow(int $id): ?Admin
+    public static function getRow(int $id): Admin
     {
-        return Admin::with('roles')->find($id);
+        $admin = Admin::with('roles')->find($id);
+
+        if (!$admin) {
+            throw new AdminNotFoundException();
+        }
+
+        return $admin;
     }
 
-    public static function storeRow(AdminStoreDTO $dto): bool
+    public static function storeRow(AdminStoreDTO $dto): Admin
     {
-        if (Admin::where('email', $dto->email)->exists()) {
-            return false;
+        $exists = Admin::where('email', $dto->email)->exists();
+
+        if ($exists) {
+            throw new DuplicateAdminException($dto->email);
         }
 
         $password = Str::random(12);
@@ -50,15 +60,15 @@ class AdminRepository
 
         $admin->syncRoles($dto->roles);
 
-        return true;
+        return $admin;
     }
 
-    public static function updateRow(AdminUpdateDTO $dto): bool
+    public static function updateRow(AdminUpdateDTO $dto): Admin
     {
         $admin = Admin::find($dto->id);
 
         if (!$admin) {
-            return false;
+            throw new AdminNotFoundException();
         }
 
         $exists = Admin::where('email', $dto->email)
@@ -66,7 +76,7 @@ class AdminRepository
             ->exists();
 
         if ($exists) {
-            return false;
+            throw new DuplicateAdminException($dto->email);
         }
 
         $admin->update([
@@ -76,28 +86,26 @@ class AdminRepository
 
         $admin->syncRoles($dto->roles);
 
-        return true;
+        return $admin->fresh();
     }
 
-    public static function deleteRow(int $id): bool
+    public static function deleteRow(int $id): void
     {
         $admin = Admin::find($id);
 
         if (!$admin) {
-            return false;
+            throw new AdminNotFoundException();
         }
 
         $admin->delete();
-
-        return true;
     }
 
-    public static function resetPassword(int $id): string|bool
+    public static function resetPassword(int $id): string
     {
         $admin = Admin::find($id);
 
         if (!$admin) {
-            return false;
+            throw new AdminNotFoundException();
         }
 
         $password = Str::random(12);

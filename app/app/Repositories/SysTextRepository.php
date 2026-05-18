@@ -2,10 +2,12 @@
 
 namespace App\Repositories;
 
+use App\Exceptions\SysTextNotFoundException;
 use App\Models\Bot\SysText;
 use App\DTO\SysTextStoreDTO;
 use App\DTO\SysTextUpdateDTO;
 use App\DTO\SysTextSearchDTO;
+use App\Exceptions\DuplicateSysTextException;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -38,12 +40,12 @@ class SysTextRepository
         return SysText::find($id);
     }
 
-    static public function updateRow(SysTextUpdateDTO $object): bool
+    public static function updateRow(SysTextUpdateDTO $object): SysText
     {
         $text = SysText::find($object->id);
 
         if (!$text) {
-            return false;
+            throw new SysTextNotFoundException();
         }
 
         $text->update([
@@ -51,36 +53,35 @@ class SysTextRepository
             'context' => $object->context,
         ]);
 
-        return true;
+        return $text->fresh();
     }
 
-    static public function storeRow(SysTextStoreDTO $object): bool
+    static public function storeRow(SysTextStoreDTO $object): SysText
     {
-        $row = SysText::query()->byAlias($object->alias)->byLang($object->lang)->first();
+        $exists = SysText::query()
+            ->byAlias($object->alias)
+            ->byLang($object->lang)
+            ->exists();
 
-        if (isset($row->context, $row->alias)) {
-            return false;
+        if ($exists) {
+            throw new DuplicateSysTextException($object->alias, $object->lang);
         }
 
-        SysText::query()->create([
+        return SysText::query()->create([
             'lang' => $object->lang,
             'alias' => $object->alias,
-            'context' => $object->context
+            'context' => $object->context,
         ]);
-
-        return true;
     }
 
-    static public function deleteRow(int $id): bool
+    public static function deleteRow(int $id): void
     {
         $text = SysText::find($id);
 
         if (!$text) {
-            return false;
+            throw new SysTextNotFoundException();
         }
 
         $text->delete();
-
-        return true;
     }
 }

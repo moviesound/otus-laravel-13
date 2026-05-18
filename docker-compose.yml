@@ -40,6 +40,16 @@ services:
       - dbdata:/var/lib/mysql
       - ./docker/db/init.sql:/docker-entrypoint-initdb.d/init.sql
 
+  mongodb:
+    image: mongo:8
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodbdata:/data/db
+    networks:
+      - app-network
+
   redis:
     image: redis:7
     networks:
@@ -64,3 +74,4 @@ volumes:
   dbdata: {}
   redisdata: {}
   php-socket: {}
+  mongodbdata: {}
