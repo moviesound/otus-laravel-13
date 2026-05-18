@@ -41,6 +41,14 @@ return new class extends Migration
             ->createIndex([
                 'action' => 'text'
             ]);
+
+        DB::connection('mongodb_admin')
+            ->getDatabase()
+            ->selectCollection('action_logs')
+            ->createIndex(
+                ['created_at' => 1],
+                ['expireAfterSeconds' => 15552000] //TTL: 180 дней
+            );
     }
 
     /**
