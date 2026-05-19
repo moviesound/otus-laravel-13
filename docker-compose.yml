@@ -6,8 +6,6 @@ services:
     volumes:
       - ./app:/var/www/app
       - php-socket:/sock
-    env_file:
-      - ./env/app.dev.env
     depends_on:
       - db
       - redis
