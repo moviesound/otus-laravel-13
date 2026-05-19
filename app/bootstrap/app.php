@@ -25,7 +25,6 @@ return Application::configure(basePath: dirname(__DIR__))
 
             // ADMIN
             Route::middleware('web')
-            //потом будет так: Route::middleware('admin')
                 ->domain(config('domains.admin'))
                 ->group(base_path('routes/admin/main.php'));
         },
@@ -33,6 +32,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+            'admin.log' => \App\Http\Middleware\Admin\ActionLogMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
@@ -51,7 +51,22 @@ return Application::configure(basePath: dirname(__DIR__))
                 return response()->view('errors.403', [], 403);
             }
 
+            if ($e instanceof \App\Exceptions\AdminNotFoundException
+                || $e instanceof \App\Exceptions\DuplicateSysTextException
+                || $e instanceof \App\Exceptions\DuplicateAdminException
+                || $e instanceof \App\Exceptions\SysTextNotFoundException
+            ) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => $e->getMessage(),
+                ], 422);
+            }
+
             return null;
         });
+
+        $exceptions->dontReport([
+            \App\Exceptions\Helper\DontReport::class,
+        ]);
 
     })->create();

@@ -16,9 +16,15 @@ class TelegramPrettyFormatter extends LineFormatter
             ?->setTimezone(new \DateTimeZone('Europe/Moscow'))
             ->format('Y-m-d H:i:s') ?? '';
 
+        $context = $record['context'] ?? [];
+
         $message = $record['message'] ?? '';
 
-        $context = $record['context'] ?? [];
+        // если Laravel уже вставил stack trace в message — режем его
+        if (str_contains($message, 'Stack trace:')) {
+            $parts = explode('Stack trace:', $message, 2);
+            $message = trim($parts[0]);
+        }
 
         $userId = $context['userId'] ?? null;
 

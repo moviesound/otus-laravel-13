@@ -11,10 +11,7 @@ use App\DTO\SysTextUpdateDTO;
 use App\Http\Controllers\Admin\Requests\SysTextSearchRequest;
 use App\Http\Controllers\Admin\Requests\SysTextStoreRequest;
 use App\Http\Controllers\Admin\Requests\SysTextUpdateRequest;
-
-use App\Objects\SysTextSearchObject;
-use App\Objects\SysTextStoreObject;
-use App\Objects\SysTextUpdateObject;
+use App\Exceptions\DuplicateSysTextException;
 use Illuminate\Http\Request;
 
 
@@ -68,20 +65,14 @@ class SysTextController extends Controller
             lang: $data['lang'],
         );
 
-        $isSuccess = $this->sysTextService->storeRow($dto);
-
-        if ($isSuccess === false) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Такой alias существует'
-            ], 409);
-        }
+        $text = $this->sysTextService->storeRow($dto);
 
         return response()->json([
             'status' => 'ok',
-            'message' => 'Запись успешно добавлена. После закрытия сообщения
-            страница обновится, а запись появится в начале таблицы'
-        ]);
+            'message' => 'Запись успешно добавлена.
+            После закрытия сообщения страница обновится,
+            а запись появится в начале таблицы'
+        ])->header('X-ITEM-ID', $text->id);
     }
 
     /**
@@ -130,19 +121,12 @@ class SysTextController extends Controller
             context: $data['context'],
         );
 
-        $isSuccess = $this->sysTextService->updateRow($dto);
-
-        if ($isSuccess === false) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Запись не найдена'
-            ], 404);
-        }
+        $this->sysTextService->updateRow($dto);
 
         return response()->json([
             'status' => 'ok',
             'message' => 'Запись успешно обновлена'
-        ]);
+        ])->header('X-ITEM-ID', $data['id']);
     }
 
     /**
@@ -150,18 +134,12 @@ class SysTextController extends Controller
      */
     public function destroy(int $id)
     {
-        $isDeleted = $this->sysTextService->deleteRow($id);
-
-        if ($isDeleted === false) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Запись не найдена'
-            ], 404);
-        }
+        $this->sysTextService->deleteRow($id);
 
         return response()->json([
+            'id' => $id,
             'status' => 'ok',
             'message' => 'Запись удалена'
-        ]);
+        ])->header('X-ITEM-ID', $id);
     }
 }

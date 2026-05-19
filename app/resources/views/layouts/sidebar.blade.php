@@ -106,6 +106,21 @@
                     </button>
                 </li>
             @endcan
+
+            @can('logs.view')
+                <li class="mt-4 border-t border-gray-800 pt-4">
+                    <a
+                        href="/logs"
+                        class="flex items-center gap-3 rounded px-4 py-2 transition hover:bg-gray-800"
+                    >
+                        <svg class="h-5 w-5 fill-current" viewBox="0 0 24 24">
+                            <path d="M3 3h18v2H3V3zm2 4h14v14H5V7zm2 2v10h10V9H7z"/>
+                        </svg>
+
+                        Логи
+                    </a>
+                </li>
+            @endcan
         </ul>
     </nav>
 </aside>

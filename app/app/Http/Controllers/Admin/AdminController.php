@@ -57,19 +57,12 @@ class AdminController extends Controller
             roles: $data['roles'],
         );
 
-        $isSuccess = $this->adminService->storeRow($dto);
-
-        if ($isSuccess === false) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Пользователь уже существует'
-            ], 409);
-        }
+        $admin = $this->adminService->storeRow($dto);
 
         return response()->json([
             'status' => 'ok',
             'message' => 'Администратор успешно создан'
-        ]);
+        ])->header('X-ITEM-ID', $admin->id);
     }
 
     public function edit(int $id)
@@ -107,53 +100,32 @@ class AdminController extends Controller
             roles: $data['roles'],
         );
 
-        $isSuccess = $this->adminService->updateRow($dto);
-
-        if ($isSuccess === false) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Пользователь не найден'
-            ], 404);
-        }
+        $admin = $this->adminService->updateRow($dto);
 
         return response()->json([
             'status' => 'ok',
             'message' => 'Пользователь успешно обновлён'
-        ]);
+        ])->header('X-ITEM-ID', $data['id']);
     }
 
     public function resetPassword(int $id)
     {
         $password = $this->adminService->resetPassword($id);
 
-        if ($password === false) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Пользователь не найден'
-            ], 404);
-        }
-
         return response()->json([
             'status' => 'ok',
             'message' => "Новый пароль: {$password}"
-        ]);
+        ])->header('X-ITEM-ID', $id);
     }
 
     public function destroy(int $id)
     {
-        $isDeleted = $this->adminService->deleteRow($id);
-
-        if ($isDeleted === false) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Пользователь не найден'
-            ], 404);
-        }
+        $this->adminService->deleteRow($id);
 
         return response()->json([
             'status' => 'ok',
             'message' => 'Пользователь удалён'
-        ]);
+        ])->header('X-ITEM-ID', $id);
     }
 }
 

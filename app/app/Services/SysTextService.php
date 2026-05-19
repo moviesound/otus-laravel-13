@@ -6,6 +6,7 @@ use App\Contracts\SysTextInterface;
 use App\DTO\SysTextStoreDTO;
 use App\DTO\SysTextUpdateDTO;
 use App\DTO\SysTextSearchDTO;
+use App\Models\Bot\SysText;
 use App\Repositories\SysTextRepository;
 use Illuminate\Pagination\AbstractPaginator;
 
@@ -16,22 +17,22 @@ class SysTextService implements SysTextInterface
         return SysTextRepository::getListWithPagination($object);
     }
 
-    public function getRow(int $id)
+    public function getRow(int $id): ?SysText
     {
         return SysTextRepository::getRow($id);
     }
 
-    public function updateRow(SysTextUpdateDTO $object)
+    public function updateRow(SysTextUpdateDTO $object): SysText
     {
         return SysTextRepository::updateRow($object);
     }
 
-    public function deleteRow(int $id): bool
+    public function deleteRow(int $id): void
     {
-        return SysTextRepository::deleteRow($id);
+        SysTextRepository::deleteRow($id);
     }
 
-    public function storeRow(SysTextStoreDTO $object)
+    public function storeRow(SysTextStoreDTO $object): SysText
     {
         return SysTextRepository::storeRow($object);
     }
