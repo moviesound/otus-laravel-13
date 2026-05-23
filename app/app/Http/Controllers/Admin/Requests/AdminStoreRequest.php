@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Requests;
 
+use App\DTO\AdminStoreDTO;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AdminStoreRequest extends FormRequest
@@ -16,15 +17,15 @@ class AdminStoreRequest extends FormRequest
         ];
     }
 
-    public function toDTOArray(): array
+    public function toDTO(): AdminStoreDTO
     {
         $validated = $this->validated();
 
-        return [
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'roles' => $validated['roles'],
-        ];
+        return new AdminStoreDTO(
+            name: $validated['name'],
+            email: $validated['email'],
+            roles: $validated['roles'],
+        );
     }
 
     public function messages(): array

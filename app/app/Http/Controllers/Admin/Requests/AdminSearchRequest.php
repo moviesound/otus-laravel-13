@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Requests;
 
+use App\DTO\AdminSearchDTO;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AdminSearchRequest extends FormRequest
@@ -15,14 +16,14 @@ class AdminSearchRequest extends FormRequest
         ];
     }
 
-    public function toDTOArray(): array
+    public function toDTO(): AdminSearchDTO
     {
         $validated = $this->validated();
 
-        return [
-            'name' => $validated['name'] ?? null,
-            'email' => $validated['email'] ?? null,
-            'perPage' => $validated['per_page'] ?? 20,
-        ];
+        return new AdminSearchDTO(
+            name: $validated['name'] ?? null,
+            email: $validated['email'] ?? null,
+            perPage: $validated['per_page'] ?? 20,
+        );
     }
 }
