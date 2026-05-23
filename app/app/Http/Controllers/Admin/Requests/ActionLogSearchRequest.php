@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Requests;
 
+use App\DTO\ActionLogSearchDTO;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ActionLogSearchRequest extends FormRequest
@@ -15,15 +16,15 @@ class ActionLogSearchRequest extends FormRequest
         ];
     }
 
-    public function toDTOArray(): array
+    public function toDTO(): ActionLogSearchDTO
     {
         $validated = $this->validated();
 
-        return [
-            'search' => $validated['search'] ?? null,
-            'userId' => $validated['user_id'] ?? null,
-            'perPage' => $validated['per_page'] ?? 20,
-        ];
+        return new ActionLogSearchDTO(
+            search: $validated['search'] ?? null,
+            userId: $validated['userId'] ?? null,
+            perPage: $validated['perPage'] ?? 30,
+        );
     }
 
     public function messages(): array

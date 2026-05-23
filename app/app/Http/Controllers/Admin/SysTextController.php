@@ -5,15 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Contracts\SysTextInterface;
 use App\Http\Controllers\Controller;
 
-use App\DTO\SysTextSearchDTO;
-use App\DTO\SysTextStoreDTO;
-use App\DTO\SysTextUpdateDTO;
 use App\Http\Controllers\Admin\Requests\SysTextSearchRequest;
 use App\Http\Controllers\Admin\Requests\SysTextStoreRequest;
 use App\Http\Controllers\Admin\Requests\SysTextUpdateRequest;
-use App\Exceptions\DuplicateSysTextException;
-use Illuminate\Http\Request;
-
 
 class SysTextController extends Controller
 {

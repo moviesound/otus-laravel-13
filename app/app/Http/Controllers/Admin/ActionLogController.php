@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Contracts\ActionLogInterface;
-use App\DTO\ActionLogSearchDTO;
 use App\Http\Controllers\Admin\Requests\ActionLogSearchRequest;
 
 class ActionLogController
@@ -14,13 +13,7 @@ class ActionLogController
 
     public function index(ActionLogSearchRequest $request)
     {
-        $data = $request->toDTOArray();
-
-        $dto = new ActionLogSearchDTO(
-            search: $data['search'] ?? null,
-            userId: $data['userId'] ?? null,
-            perPage: $data['perPage'] ?? 30,
-        );
+        $dto = $request->toDTO();
 
         $logs = $this->actionLogService
             ->getList($dto)
