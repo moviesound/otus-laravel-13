@@ -11,6 +11,7 @@ use App\Models\Bot\SysText;
 use App\Repositories\SysTextRepository;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Arr;
 
 class SysTextService implements SysTextInterface
 {
@@ -77,7 +78,7 @@ class SysTextService implements SysTextInterface
                     $row = SysTextRepository::getByAliasAndLang($alias, 'ru');
                 }
 
-                return $row;
+                return Arr::only($row, ['id', 'alias', 'lang', 'context']);
             }
         );
 
