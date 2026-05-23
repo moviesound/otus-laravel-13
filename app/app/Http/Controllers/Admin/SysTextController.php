@@ -26,14 +26,9 @@ class SysTextController extends Controller
 
     public function index(SysTextSearchRequest $request)
     {
-        $data = $request->toDTOArray();
+        $sysTextSearchDTO = $request->toDTO();
 
-        $dto = new SysTextSearchDTO(
-            alias: $data['alias'],
-            lang: $data['lang'],
-            perPage: $data['perPage'],
-        );
-        $texts = $this->sysTextService->getList($dto)
+        $texts = $this->sysTextService->getList($sysTextSearchDTO)
             ->appends($request->query());
 
         return view('texts.index', compact('texts'));
@@ -57,15 +52,9 @@ class SysTextController extends Controller
      */
     public function store(SysTextStoreRequest $request)
     {
-        $data = $request->toDTOArray();
+        $sysTextStoreDTO = $request->toDTO();
 
-        $dto = new SysTextStoreDTO(
-            alias: $data['alias'],
-            context: $data['context'],
-            lang: $data['lang'],
-        );
-
-        $text = $this->sysTextService->storeRow($dto);
+        $text = $this->sysTextService->storeRow($sysTextStoreDTO);
 
         return response()->json([
             'status' => 'ok',
@@ -111,22 +100,16 @@ class SysTextController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(SysTextUpdateRequest $request, int $id)
+    public function update(SysTextUpdateRequest $request)
     {
-        $data = $request->toDTOArray();
+        $sysTextUpdateDTO = $request->toDTO();
 
-        $dto = new SysTextUpdateDTO(
-            id: $data['id'],
-            alias: $data['alias'],
-            context: $data['context'],
-        );
-
-        $this->sysTextService->updateRow($dto);
+        $this->sysTextService->updateRow($sysTextUpdateDTO);
 
         return response()->json([
             'status' => 'ok',
             'message' => 'Запись успешно обновлена'
-        ])->header('X-ITEM-ID', $data['id']);
+        ])->header('X-ITEM-ID', $sysTextUpdateDTO->id);
     }
 
     /**
