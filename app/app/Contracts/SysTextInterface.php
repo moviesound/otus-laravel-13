@@ -17,4 +17,6 @@ interface SysTextInterface
     public function deleteRow(int $id);
 
     public function storeRow(SysTextStoreDTO $object);
+
+    public function get(string $alias, string $lang, array $replace);
 }
