@@ -31,12 +31,14 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             'query-logging'
         );
 
+        $kernel = $this->app->make(Kernel::class);
+        $kernel->appendMiddlewareToGroup(config('query-logging.group', 'web'), ActionLogMiddleware::class);
+
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         $this->loadRoutesFrom(__DIR__.'/../routes/logging.php');
         $this->loadViewsFrom(__DIR__ . '/../views', 'query_logging');
+        $this->loadViewsFrom(__DIR__ . '/../views', 'query_logging');
 
-        $kernel = $this->app->make(Kernel::class);
-        $kernel->appendMiddlewareToGroup(config('query-logging.group', 'web'), ActionLogMiddleware::class);
 
         Model::created(function (Model $model) {
             $key = $model->getKey();
@@ -53,7 +55,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         ], 'query_logging.config');
 
         $this->publishes([
-            __DIR__ . '/../views' => resource_path('views/vendor/logging'),
+            __DIR__ . '/../views' => resource_path('views/vendor/query_logging'),
         ], 'query_logging.views');
     }
 }

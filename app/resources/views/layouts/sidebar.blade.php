@@ -110,7 +110,7 @@
             @can('logs.view')
                 <li class="mt-4 border-t border-gray-800 pt-4">
                     <a
-                        href="/logs"
+                        href="/logging"
                         class="flex items-center gap-3 rounded px-4 py-2 transition hover:bg-gray-800"
                     >
                         <svg class="h-5 w-5 fill-current" viewBox="0 0 24 24">

@@ -1,4 +1,4 @@
-@extends('logging::layout')
+@extends('query_logging::layout')
 
 @section('title', 'Action Logs')
 
@@ -32,6 +32,6 @@
 
     </form>
 
-    @include('logging::partials.table')
+    @include('query_logging::partials.table')
 
 @endsection

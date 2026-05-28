@@ -11,8 +11,9 @@ class ActionLogRepository
     public static function getListWithPagination(
         ActionLogSearchDTO $dto
     ): LengthAwarePaginator {
+
         return ActionLog::query()
-            ->when($dto->userId, fn ($q) => $q->where('user_id', $dto->userId))
+            ->when($dto->userId, fn ($q) => $q->where('user_id', (int) $dto->userId))
             ->when($dto->search, fn ($q) => $q->where('action', 'like', "%{$dto->search}%"))
             ->orderBy('created_at', 'desc')
             ->paginate($dto->perPage);

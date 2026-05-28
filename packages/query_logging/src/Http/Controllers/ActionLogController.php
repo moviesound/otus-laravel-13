@@ -19,6 +19,6 @@ class ActionLogController
             ->getList($dto)
             ->appends($request->query());
 
-        return view('query_logging::logging', compact('logs'));
+        return view('query_logging::index', compact('logs'));
     }
 }

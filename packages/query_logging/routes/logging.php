@@ -11,9 +11,9 @@ if (config('query-logging.domain')) {
 
 $router->group(function () {
     Route::get('/logging', [
-        \Packages\Logging\Http\Controllers\ActionLogController::class,
+        \Packages\QueryLogging\Http\Controllers\ActionLogController::class,
         'index'
     ])
-    ->name('query_logging::logging')
+    ->name('query_logging::index')
     ->middleware(config('query-logging.route_middlewares', []));
 });
