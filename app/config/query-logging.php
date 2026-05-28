@@ -27,7 +27,7 @@ return [
 
     'middleware_group' => 'web',
 
-    'route_middlewares' => ['permission:logs.view', 'auth:admin', 'admin.log'],
+    'route_middlewares' => ['permission:logs.view', 'auth:admin',],
 
     'domain' => env('ADMIN_HOST', 'admin.localhost'),
 ];
