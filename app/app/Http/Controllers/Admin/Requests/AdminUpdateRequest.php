@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Requests;
 
+use App\DTO\AdminUpdateDTO;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AdminUpdateRequest extends FormRequest
@@ -16,16 +17,16 @@ class AdminUpdateRequest extends FormRequest
         ];
     }
 
-    public function toDTOArray(): array
+    public function toDTO(): AdminUpdateDTO
     {
         $validated = $this->validated();
 
-        return [
-            'id' => (int) $this->route('id'),
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'roles' => $validated['roles'],
-        ];
+        return new AdminUpdateDTO(
+            id: (int) $this->route('id'),
+            name: $validated['name'],
+            email: $validated['email'],
+            roles: $validated['roles'],
+        );
     }
 
     public function messages(): array

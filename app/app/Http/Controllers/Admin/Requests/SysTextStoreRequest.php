@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Requests;
 
+use App\DTO\SysTextStoreDTO;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\AllowedLang;
 
@@ -18,15 +19,14 @@ class SysTextStoreRequest extends FormRequest
         ];
     }
 
-    public function toDTOArray(): array
+    public function toDTO(): SysTextStoreDTO
     {
         $validated = $this->validated();
-
-        return [
-            'alias' => $validated['alias'],
-            'context' => $validated['context'],
-            'lang' => $validated['lang'],
-        ];
+        return new SysTextStoreDTO(
+            alias: $validated['alias'],
+            context: $validated['context'],
+            lang: $validated['lang'],
+        );
     }
 
     public function messages(): array

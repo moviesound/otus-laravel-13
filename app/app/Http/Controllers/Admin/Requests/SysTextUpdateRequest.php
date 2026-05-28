@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Requests;
 
+use App\DTO\SysTextUpdateDTO;
 use Illuminate\Foundation\Http\FormRequest;
 
 class SysTextUpdateRequest extends FormRequest
@@ -14,15 +15,15 @@ class SysTextUpdateRequest extends FormRequest
         ];
     }
 
-    public function toDTOArray(): array
+    public function toDTO(): SysTextUpdateDTO
     {
         $validated = $this->validated();
 
-        return [
-            'id' => (int) $this->route('id'),
-            'alias' => $validated['alias'],
-            'context' => $validated['context'],
-        ];
+        return new SysTextUpdateDTO(
+            id: (int) $this->route('id'),
+            alias: $validated['alias'],
+            context: $validated['context'],
+        );
     }
 
     public function messages(): array

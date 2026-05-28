@@ -76,12 +76,15 @@ class SysTextRepository
 
     public static function deleteRow(int $id): void
     {
-        $text = SysText::find($id);
+        SysText::destroy([$id]);
+    }
 
-        if (!$text) {
-            throw new SysTextNotFoundException();
-        }
-
-        $text->delete();
+    public static function getByAliasAndLang(string $alias, string $lang): ?array
+    {
+        return SysText::query()
+            ->byAlias($alias)
+            ->byLang($lang)
+            ->first()
+            ?->toArray();
     }
 }

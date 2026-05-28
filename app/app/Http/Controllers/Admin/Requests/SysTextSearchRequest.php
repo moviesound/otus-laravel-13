@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Requests;
 
+use App\DTO\SysTextSearchDTO;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\AllowedLang;
 
@@ -17,15 +18,16 @@ class SysTextSearchRequest extends FormRequest
         ];
     }
 
-    public function toDTOArray(): array
+    public function toDTO(): SysTextSearchDTO
     {
         $validated = $this->validated();
         $langs = config('langs.list');
-        return [
-            'alias' => $validated['alias'] ?? null,
-            'lang' => $validated['lang'] ?? $langs[0] ?? 'ru',
-            'perPage' => $validated['per_page'] ?? 20,
-        ];
+
+        return new SysTextSearchDTO(
+            alias: $validated['alias'] ?? null,
+            lang: $validated['lang'] ?? $langs[0] ?? 'ru',
+            perPage: $validated['per_page'] ?? 20,
+        );
     }
 
     public function messages(): array

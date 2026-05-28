@@ -3,9 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Contracts\AdminInterface;
-use App\DTO\AdminSearchDTO;
-use App\DTO\AdminStoreDTO;
-use App\DTO\AdminUpdateDTO;
 use App\Http\Controllers\Admin\Requests\AdminSearchRequest;
 use App\Http\Controllers\Admin\Requests\AdminStoreRequest;
 use App\Http\Controllers\Admin\Requests\AdminUpdateRequest;
@@ -21,13 +18,7 @@ class AdminController extends Controller
 
     public function index(AdminSearchRequest $request)
     {
-        $data = $request->toDTOArray();
-
-        $dto = new AdminSearchDTO(
-            name: $data['name'],
-            email: $data['email'],
-            perPage: $data['perPage'],
-        );
+        $dto = $request->toDTO();
 
         $admins = $this->adminService->getList($dto)
             ->appends($request->query());
@@ -49,13 +40,7 @@ class AdminController extends Controller
 
     public function store(AdminStoreRequest $request)
     {
-        $data = $request->toDTOArray();
-
-        $dto = new AdminStoreDTO(
-            name: $data['name'],
-            email: $data['email'],
-            roles: $data['roles'],
-        );
+        $dto = $request->toDTO();
 
         $admin = $this->adminService->storeRow($dto);
 
@@ -89,23 +74,16 @@ class AdminController extends Controller
         ]);
     }
 
-    public function update(AdminUpdateRequest $request, int $id)
+    public function update(AdminUpdateRequest $request)
     {
-        $data = $request->toDTOArray();
+        $dto = $request->toDTO();
 
-        $dto = new AdminUpdateDTO(
-            id: $data['id'],
-            name: $data['name'],
-            email: $data['email'],
-            roles: $data['roles'],
-        );
-
-        $admin = $this->adminService->updateRow($dto);
+        $this->adminService->updateRow($dto);
 
         return response()->json([
             'status' => 'ok',
             'message' => 'Пользователь успешно обновлён'
-        ])->header('X-ITEM-ID', $data['id']);
+        ])->header('X-ITEM-ID', $dto->id);
     }
 
     public function resetPassword(int $id)
