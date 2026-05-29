@@ -24,4 +24,4 @@
 /packages/query_logging/vendor
 
 Thumbs.db
-
+.gitignore
