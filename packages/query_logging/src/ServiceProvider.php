@@ -32,7 +32,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         );
 
         $kernel = $this->app->make(Kernel::class);
-        $kernel->appendMiddlewareToGroup(config('query-logging.group', 'web'), ActionLogMiddleware::class);
+        $kernel->appendMiddlewareToGroup(config('query-logging.middleware_group', 'web'), ActionLogMiddleware::class);
 
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         $this->loadRoutesFrom(__DIR__.'/../routes/logging.php');
