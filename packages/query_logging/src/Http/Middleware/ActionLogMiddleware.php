@@ -5,7 +5,7 @@ namespace Packages\QueryLogging\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Packages\QueryLogging\Contracts\ActionLoggerInterface;
-use Packages\QueryLogging\Services\LastCreatedModelStore;
+use Packages\QueryLogging\Contracts\LastCreatedModelStoreInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 class ActionLogMiddleware
@@ -108,7 +108,7 @@ class ActionLogMiddleware
         }
 
         $storedId = app(
-            LastCreatedModelStore::class
+            LastCreatedModelStoreInterface::class
         )->get();
 
         if ($storedId) {

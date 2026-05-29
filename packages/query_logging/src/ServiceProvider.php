@@ -37,8 +37,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         $this->loadRoutesFrom(__DIR__.'/../routes/logging.php');
         $this->loadViewsFrom(__DIR__ . '/../views', 'query_logging');
-        $this->loadViewsFrom(__DIR__ . '/../views', 'query_logging');
-
 
         Model::created(function (Model $model) {
             $key = $model->getKey();
