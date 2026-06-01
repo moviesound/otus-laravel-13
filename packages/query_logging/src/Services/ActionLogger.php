@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Services;
+namespace Packages\QueryLogging\Services;
 
-use App\Contracts\ActionLogInterface;
-use App\DTO\ActionLogSearchDTO;
-use App\Models\Admin\ActionLog;
-use App\Repositories\ActionLogRepository;
+
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Packages\QueryLogging\Contracts\ActionLoggerInterface;
+use Packages\QueryLogging\DTO\ActionLogSearchDTO;
+use Packages\QueryLogging\Models\ActionLog;
+use Packages\QueryLogging\Repositories\ActionLogRepository;
 
-class ActionLogService implements ActionLogInterface
+class ActionLogger implements ActionLoggerInterface
 {
     public function getList(ActionLogSearchDTO $dto): LengthAwarePaginator
     {

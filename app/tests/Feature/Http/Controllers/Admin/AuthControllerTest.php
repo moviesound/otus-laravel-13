@@ -1,6 +1,6 @@
 <?php
 
-namespace Feature\Http\Controllers\Admin;
+namespace Tests\Feature\Http\Controllers\Admin;
 
 use App\Models\Admin\Permission;
 use App\Models\Admin\Role;

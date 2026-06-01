@@ -9,13 +9,11 @@ Route::middleware('guest:admin')->group(function () {
     require base_path('routes/admin/guests.php');
 });
 
-Route::middleware(['auth:admin', 'admin.log'])->group(function () {
+Route::middleware(['auth:admin'])->group(function () {
 
     require base_path('routes/admin/texts.php');
 
     require base_path('routes/admin/users.php');
-
-    require base_path('routes/admin/logs.php');
 
     Route::get('/test-error', function () {
         0/0;

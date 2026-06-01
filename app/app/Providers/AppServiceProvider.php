@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,11 +15,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             \App\Contracts\SysTextInterface::class,
             \App\Services\SysTextService::class
-        );
-
-        $this->app->bind(
-            \App\Contracts\ActionLogInterface::class,
-            \App\Services\ActionLogService::class
         );
 
         $this->app->bind(

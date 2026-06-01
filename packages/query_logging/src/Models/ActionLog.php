@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Admin;
+namespace Packages\QueryLogging\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use MongoDB\Laravel\Eloquent\Model;

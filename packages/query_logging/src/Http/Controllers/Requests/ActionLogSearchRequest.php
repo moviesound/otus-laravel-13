@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Requests;
+namespace Packages\QueryLogging\Http\Controllers\Requests;
 
-use App\DTO\ActionLogSearchDTO;
 use Illuminate\Foundation\Http\FormRequest;
+use Packages\QueryLogging\DTO\ActionLogSearchDTO;
 
 class ActionLogSearchRequest extends FormRequest
 {
@@ -22,8 +22,8 @@ class ActionLogSearchRequest extends FormRequest
 
         return new ActionLogSearchDTO(
             search: $validated['search'] ?? null,
-            userId: $validated['userId'] ?? null,
-            perPage: $validated['perPage'] ?? 30,
+            userId: $validated['user_id'] ?? null,
+            perPage: $validated['per_page'] ?? 30,
         );
     }
 

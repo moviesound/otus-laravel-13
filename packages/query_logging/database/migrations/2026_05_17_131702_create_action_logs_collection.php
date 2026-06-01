@@ -25,13 +25,6 @@ return new class extends Migration
             ->getDatabase()
             ->selectCollection('action_logs')
             ->createIndex([
-                'user_id' => -1
-            ]);
-
-        DB::connection('mongodb_admin')
-            ->getDatabase()
-            ->selectCollection('action_logs')
-            ->createIndex([
                 'created_at' => -1
             ]);
 

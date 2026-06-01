@@ -1,20 +1,21 @@
 <?php
 
-namespace App\Repositories;
+namespace Packages\QueryLogging\Repositories;
 
-use App\DTO\ActionLogSearchDTO;
-use App\Models\Admin\ActionLog;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Packages\QueryLogging\DTO\ActionLogSearchDTO;
+use Packages\QueryLogging\Models\ActionLog;
 
 class ActionLogRepository
 {
     public static function getListWithPagination(
         ActionLogSearchDTO $dto
     ): LengthAwarePaginator {
+
         return ActionLog::query()
-            ->when($dto->userId, fn ($q) => $q->where('user_id', $dto->userId))
+            ->when($dto->userId, fn ($q) => $q->where('user_id', (int) $dto->userId))
             ->when($dto->search, fn ($q) => $q->where('action', 'like', "%{$dto->search}%"))
-            ->orderByDesc('created_at')
+            ->orderBy('created_at', 'desc')
             ->paginate($dto->perPage);
     }
 

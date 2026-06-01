@@ -5,6 +5,7 @@ services:
     container_name: app
     volumes:
       - ./app:/var/www/app
+      - ./packages:/var/www/packages
       - php-socket:/sock
     depends_on:
       - db

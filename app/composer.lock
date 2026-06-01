@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6cc94db349d657657e53fe1182e6ce5e",
+    "content-hash": "5e96187a3790f16d2810403d666bf0e7",
     "packages": [
         {
             "name": "brick/math",
@@ -2716,6 +2716,41 @@
                 }
             ],
             "time": "2026-02-16T23:10:27+00:00"
+        },
+        {
+            "name": "packages/query_logging",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "../packages/query_logging",
+                "reference": "505a593e781cd67c79689ce9c752d23ac04dd952"
+            },
+            "require": {
+                "illuminate/support": "^13.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Packages\\QueryLogging\\ServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Packages\\QueryLogging\\": "src/"
+                }
+            },
+            "authors": [
+                {
+                    "name": "Sergey Klimov",
+                    "email": "moviesound@ya.ru"
+                }
+            ],
+            "description": "Logging of CRUD actions in Laravel",
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "phpoption/phpoption",
@@ -8711,8 +8746,10 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "stable",
-    "stability-flags": {},
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "packages/query_logging": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

@@ -32,7 +32,6 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
-            'admin.log' => \App\Http\Middleware\Admin\ActionLogMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

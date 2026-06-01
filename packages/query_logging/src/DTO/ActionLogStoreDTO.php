@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DTO;
+namespace Packages\QueryLogging\DTO;
 
 final class ActionLogStoreDTO
 {

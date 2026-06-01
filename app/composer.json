@@ -10,6 +10,7 @@
         "laravel/framework": "^13.0",
         "laravel/tinker": "^3.0",
         "mongodb/laravel-mongodb": "^5.7",
+        "packages/query_logging": "dev-main",
         "spatie/laravel-permission": "^7.4"
     },
     "require-dev": {
@@ -83,6 +84,12 @@
             "php-http/discovery": true
         }
     },
-    "minimum-stability": "stable",
-    "prefer-stable": true
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../packages/query_logging"
+        }
+    ]
 }
