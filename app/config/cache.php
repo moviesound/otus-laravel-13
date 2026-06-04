@@ -127,4 +127,7 @@ return [
 
     'serializable_classes' => false,
 
+    'warming_tables' => [
+        'sys_texts'
+    ]
 ];
