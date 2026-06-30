@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'telegram' => [
+        'query_key' => env('TELEGRAM_QUERY_KEY', '1'),
+        'api_key' => env('TELEGRAM_API_KEY', '1'),
+    ]
+
 ];

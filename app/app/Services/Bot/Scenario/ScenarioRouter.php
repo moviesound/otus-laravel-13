@@ -1,0 +1,45 @@
+<?php
+
+namespace App\Services\Bot\Scenario;
+
+use App\Contracts\Bot\Messengers\MessengerInterface;
+use App\Contracts\Bot\Scenario\ScenarioRouterInterface;
+use App\Contracts\SysTextInterface;
+use App\Services\Bot\BotContext;
+use App\Services\Bot\Helpers\Scenarios\Messages\MessageContext;
+
+class ScenarioRouter implements ScenarioRouterInterface
+{
+    public function __construct(
+        private readonly StepRegistry       $registry,
+        private readonly StepExecutor       $executor,
+        private readonly MessengerInterface $telegram,
+        private readonly SysTextInterface   $sysText,
+    )
+    {
+    }
+
+    public function route(BotContext $context): void
+    {
+        try {
+            $step = $this->registry->get(
+                $context->scenarioDTO->step
+            );
+
+            $this->executor->execute($step, $context);
+        } catch (\Throwable $e) {
+            $this->unknown(
+                $context->userDTO->language,
+                MessageContext::socialIdByUserSocialId($context)
+            );
+        }
+    }
+
+    private function unknown(string $lang, int|string $chatId): void
+    {
+        $this->telegram->sendMessage(
+            $chatId,
+            $this->sysText->get('unknown_command_no_step_bot', $lang)
+        );
+    }
+}

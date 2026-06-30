@@ -1,0 +1,68 @@
+<?php
+
+namespace App\Services\Bot;
+
+use App\Contracts\Bot\Messengers\MessengerFactoryInterface;
+use App\Contracts\Bot\Repositories\StepRepositoryInterface;
+use App\Contracts\Bot\Repositories\UserRepositoryInterface;
+use App\Contracts\Bot\Scenario\ScenarioResolverInterface;
+use App\DTO\Bot\BotInput;
+use App\DTO\Bot\Message\MessageDTO;
+use App\Enums\Bot\MessageType;
+
+class BotContextBuilder
+{
+    public function __construct(
+        private readonly UserRepositoryInterface $userRepo,
+        private readonly StepRepositoryInterface $stepRepo,
+        private readonly ScenarioResolverInterface $scenarioResolver,
+        private readonly MessengerFactoryInterface $messengerFactory,
+    ) {}
+
+    public function build(BotInput $input): BotContext
+    {
+        // 1. user
+        $user = $this->userRepo->getUserByChatIdAndMessengerType(
+            $input->chatId,
+            $input->messenger
+        );
+
+        // 2. user_socials.id
+        $userSocialId = $this->userRepo->getSocialUserIdByChatIdAndMessengerType(
+            $input->chatId,
+            $input->messenger
+        );
+
+        // 2. state
+        $state = $this->stepRepo->get($userSocialId);
+
+        // 3. resolve scenario
+        $resolvedState = $this->scenarioResolver->resolve(
+            state: $state,
+            userSocialId: $userSocialId,
+            message: $input->text
+        );
+
+        // 4. message DTO
+        $messageDTO = new MessageDTO(
+            type: $input->text ? MessageType::Message : MessageType::Callback,
+            text: $input->text,
+            raw: [],
+        );
+
+        // 5. messenger
+        $messenger = $this->messengerFactory->make(
+            chatId: $input->chatId,
+            userId: $user->id,
+            messenger: $input->messenger
+        );
+
+        // 6. final context
+        return new BotContext(
+            userDTO: $user,
+            scenarioDTO: $resolvedState,
+            messageDTO: $messageDTO,
+            messenger: $messenger,
+        );
+    }
+}

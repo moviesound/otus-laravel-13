@@ -22,6 +22,8 @@ return new class extends Migration
 
             $table->unsignedTinyInteger('sex')->nullable()->comment('1 - мужской, 2 - женский');
 
+            $table->string('timezone', 255)->default('Europe/Moscow');
+
             $table->string('email', 255)->nullable()->index();//index
             $table->string('phone', 255)->nullable()->index();//index
 

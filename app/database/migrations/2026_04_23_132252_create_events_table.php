@@ -52,6 +52,9 @@ return new class extends Migration
                 ->nullable()
                 ->comment('Следующее напоминание');
 
+            $table->dateTime('last_shown_in_digest_at')
+                ->nullable()
+                ->comment('Последний раз показывалась в дайджесте');
 
             $table->index('template_id');
             $table->index('status');
@@ -61,6 +64,7 @@ return new class extends Migration
             $table->index('deadline');
             $table->index('created_at');
             $table->index('next_system_remind_at');
+            $table->index('last_shown_in_digest_at');
         });
     }
 
