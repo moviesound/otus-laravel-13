@@ -99,11 +99,14 @@ return new class extends Migration
             $table->index('created_at');
             $table->index('updated_at');
             $table->index('status');
-            $table->index('user_id');
             $table->index('has_call');
             $table->index('has_sms');
             $table->index('time_set_by_user');
             $table->index('event_type');
+            $table->index(
+                ['user_id', 'status', 'id'],
+                'event_templates_user_status_id_idx'
+            );
 
             $table->fullText('title');
             $table->fullText('description');

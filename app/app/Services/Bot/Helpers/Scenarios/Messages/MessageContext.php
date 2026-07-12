@@ -40,7 +40,7 @@ class MessageContext
         return null;
     }
 
-    private function getUserSocialIdFromContext(BotContext $context): int
+    private static function getUserSocialIdFromContext(BotContext $context): int
     {
         return $context->scenarioDTO->userSocialId;
     }

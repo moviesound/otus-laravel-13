@@ -127,7 +127,6 @@ class AddPlanningTitleStep implements StepInterface
 
             $replace = [];
         }
-
         return $context->messenger->format(
             $this->textResolver->header($messenger, $lang, $headerKey, 'task_step_name'),
             $this->textResolver->get(

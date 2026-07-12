@@ -56,7 +56,6 @@ return new class extends Migration
                 ->nullable()
                 ->comment('Последний раз показывалась в дайджесте');
 
-            $table->index('template_id');
             $table->index('status');
             $table->index(['period_start', 'period_end'], 'period');
             $table->index('period_end');
@@ -65,6 +64,10 @@ return new class extends Migration
             $table->index('created_at');
             $table->index('next_system_remind_at');
             $table->index('last_shown_in_digest_at');
+            $table->index(
+                ['template_id', 'status', 'id'],
+                'events_template_status_id_idx'
+            );
         });
     }
 

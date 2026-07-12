@@ -6,7 +6,7 @@ use App\DTO\Bot\State\StepStateDTO;
 
 interface StepRepositoryInterface
 {
-    public function get(int|string $chatId): ?StepStateDTO;
+    public function get(int|string $userSocialId, string $messenger): ?StepStateDTO;
 
     public function save(StepStateDTO $dto): void;
 

@@ -42,6 +42,12 @@ class UserSocial extends Model
     }
 
     #[Scope]
+    protected function byId(Builder $query, int|string $id)
+    {
+        return $query->where('id', $id);
+    }
+
+    #[Scope]
     protected function bySocialId(Builder $query, string|int $id)
     {
         return $query->where('social_id', $id);

@@ -3,9 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Bot\CommonEntity;
-use App\Models\Bot\CommonEntityEvent;
-use App\Models\Bot\CommonEntityReminder;
-use App\Models\Bot\CommonEntityTask;
 use App\Models\Bot\Event;
 use App\Models\Bot\EventTemplate;
 use App\Models\Bot\Reminder;

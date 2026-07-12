@@ -11,6 +11,7 @@ final class BotContext
 {
     public function __construct(
         public UserDTO $userDTO,
+        public int $userSocialId,
         public StepStateDTO $scenarioDTO,
         public MessageDTO $messageDTO,
         public ?MessengerInterface $messenger,

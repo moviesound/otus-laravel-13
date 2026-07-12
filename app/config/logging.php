@@ -141,6 +141,12 @@ return [
             'formatter' =>  App\Support\Logging\TelegramPrettyFormatter::class,
         ],
 
+        'telegram-webhook' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/telegram-webhook.log'),
+            'level' => 'debug',
+        ],
+
     ],
 
 ];

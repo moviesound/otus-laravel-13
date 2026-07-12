@@ -45,6 +45,8 @@ final readonly class MessageIntentResolver
         }
 
         return match ($message) {
+            'yes'    => MessageIntent::Yes,
+            'no'     => MessageIntent::No,
             'edit'   => MessageIntent::Edit,
             'delete' => MessageIntent::Delete,
             'add'    => MessageIntent::Add,

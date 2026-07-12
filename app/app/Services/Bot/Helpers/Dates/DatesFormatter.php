@@ -58,7 +58,6 @@ final readonly class DatesFormatter
         bool   $rod = true,
     ): string
     {
-
         $aliases = [
             1 => 'january',
             2 => 'february',

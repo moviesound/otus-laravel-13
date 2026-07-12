@@ -56,7 +56,7 @@ final class SelectPlanTypeStep implements StepInterface
         );
     }
 
-    private function getButtons(BotContext $context, ?string $messenger, string $lang): array
+    private function getButtons(BotContext $context, string $messenger, string $lang): array
     {
         $buttons = [
             [
@@ -78,6 +78,7 @@ final class SelectPlanTypeStep implements StepInterface
                 ],
             ]
         ];
+
 
         $row = [];
         if (!$this->hasTasks($context)) {
@@ -142,6 +143,6 @@ final class SelectPlanTypeStep implements StepInterface
 
     private function hasTasks(BotContext $context): bool
     {
-        return count($this->searchPlanningRepository->searchAllUsersTasksEvents($context->userDTO->id, 1, 0)) > 0;
+        return $this->searchPlanningRepository->hasActive($context->userDTO->id) === true;
     }
 }

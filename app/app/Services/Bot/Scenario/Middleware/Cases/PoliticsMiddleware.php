@@ -6,7 +6,7 @@ use App\Contracts\Bot\Repositories\StepRepositoryInterface;
 use App\Contracts\Bot\Scenario\Middleware\Cases\PoliticsMiddlewareInterface;
 use App\DTO\Bot\State\StepStateDTO;
 use App\Services\Bot\BotContext;
-use App\Services\Bot\Helpers\MessageContext;
+use App\Services\Bot\Helpers\Scenarios\Messages\MessageContext;
 
 class PoliticsMiddleware implements PoliticsMiddlewareInterface
 {

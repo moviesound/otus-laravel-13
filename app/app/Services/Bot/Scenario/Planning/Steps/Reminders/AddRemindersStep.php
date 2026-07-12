@@ -12,6 +12,7 @@ use App\Services\Bot\Helpers\Scenarios\Messages\MessageContext;
 use App\Services\Bot\Helpers\Scenarios\Messages\MessageIntentResolver;
 use App\Services\Bot\Helpers\Scenarios\ScenarioHelper;
 use App\Services\Bot\Messengers\MessengerTextResolver;
+use App\Services\Bot\Scenario\Planning\Steps\AlmostDonePlanningAddingStep;
 use App\Services\Bot\Scenario\Planning\Steps\RepeatingDates\SelectRepeatingOrDateStep;
 use App\Services\Bot\Scenario\Planning\Steps\PlanningDoneStep;
 use App\Services\Bot\Scenario\StepResultFactory;
@@ -65,46 +66,30 @@ final class AddRemindersStep implements StepInterface
         string $message,
     ): StepResultDTO {
 
-        return match ($message) {
+        $reminderTypes = [
+            'reminder_hours' => 'hours',
+            'reminder_days' => 'days',
+            'reminder_weeks' => 'weeks',
+            'reminder_months' => 'months',
+        ];
 
-            'reminder_hours' =>
-            StepResultFactory::switch(
+        if (isset($reminderTypes[$message])) {
+            return StepResultFactory::switch(
                 SelectReminderValueStep::STEP_KEY,
                 [],
-                'hours'
-            ),
+                $reminderTypes[$message]
+            );
+        }
 
-            'reminder_days' =>
-            StepResultFactory::switch(
-                SelectReminderValueStep::STEP_KEY,
-                [],
-                'days'
-            ),
-
-            'reminder_weeks' =>
-            StepResultFactory::switch(
-                SelectReminderValueStep::STEP_KEY,
-                [],
-                'weeks'
-            ),
-
-            'reminder_months' =>
-            StepResultFactory::switch(
-                SelectReminderValueStep::STEP_KEY,
-                [],
-                'months'
-            ),
-
-            'delete_reminders' =>
-            StepResultFactory::switch(
+        if ($message === 'delete_reminders') {
+            return StepResultFactory::switch(
                 DeleteReminderStep::STEP_KEY
-            ),
+            );
+        }
 
-            default =>
-            StepResultFactory::repeat(
-                $this->wrongDataUseButtonsMessage->get($context)
-            ),
-        };
+        return StepResultFactory::repeat(
+            $this->wrongDataUseButtonsMessage->get($context)
+        );
     }
 
     public function show(

@@ -3,13 +3,15 @@
 namespace App\Repositories\Bot\PlanningRepository;
 
 use App\Contracts\Bot\Repositories\PlanningRepository\SearchPlanningRepositoryInterface;
+use App\Models\Bot\EventTemplate;
+use App\Models\Bot\TaskTemplate;
 use Illuminate\Support\Facades\DB;
 
 class SearchPlanningRepository implements SearchPlanningRepositoryInterface
 {
     public function searchTasksEventsByScore(int $userId, string $text, int $limit = 50, int $offset = 0): array
     {
-        return DB::connection('yozh')->select(
+        return DB::connection('main')->select(
             $this->getQueryTasksEventsByScore(),
             [
                 'user_id' => $userId,
@@ -20,12 +22,30 @@ class SearchPlanningRepository implements SearchPlanningRepositoryInterface
         );
     }
 
+    public function hasActive(int $userId)
+    {
+        return TaskTemplate::query()
+                ->byUserId($userId)
+                ->isActive()
+                ->whereHas('tasks', fn ($q) => $q->isActive())
+                ->exists()
+
+            ||
+
+            EventTemplate::query()
+                ->byUserId($userId)
+                ->isActive()
+                ->whereHas('events', fn ($q) => $q->isActive())
+                ->exists();
+    }
+
     public function searchAllUsersTasksEvents(int $userId, int $limit = 20, int $offset = 0): array
     {
-        return DB::connection('yozh')->select(
+        return DB::connection('main')->select(
             $this->getQueryAllTasksEventsByUser(),
             [
-                'user_id' => $userId,
+                'user_id_tasks' => $userId,
+                'user_id_events' => $userId,
                 'limit' => $limit,
                 'offset' => $offset,
             ]
@@ -35,116 +55,214 @@ class SearchPlanningRepository implements SearchPlanningRepositoryInterface
     private function getQueryAllTasksEventsByUser()
     {
         return <<<SQL
-WITH latest_tasks AS (
-    SELECT t1.*
-    FROM tasks t1
-    INNER JOIN (
-        SELECT template_id, MAX(id) AS max_id
-        FROM tasks
-        GROUP BY template_id
-    ) t2 ON t1.id = t2.max_id
-),
-
-latest_events AS (
-    SELECT e1.*
-    FROM events e1
-    INNER JOIN (
-        SELECT template_id, MAX(id) AS max_id
-        FROM events
-        GROUP BY template_id
-    ) e2 ON e1.id = e2.max_id
-),
-
-latest_reminders AS (
-    SELECT r1.*
-    FROM reminders r1
-    INNER JOIN (
-        SELECT template_id, MAX(id) AS max_id
-        FROM reminders
-        GROUP BY template_id
-    ) r2 ON r1.id = r2.max_id
-)
-
 SELECT
-    tt.id AS entity_id,
-    'task' AS type,
+    p.entity_id,
+    p.type,
 
-    tt.title,
-    tt.description,
+    CASE
+        WHEN p.type = 'task' THEN tt.title
+        ELSE et.title
+    END AS title,
 
+    CASE
+        WHEN p.type = 'task' THEN tt.description
+        ELSE et.description
+    END AS description,
+
+    p.nearest_time,
+    p.period_end,
+
+    CASE
+        WHEN p.type = 'task' THEN
+            COALESCE(
+                (
+                    SELECT JSON_ARRAYAGG(tg.tag)
+                    FROM tag_task ttag
+                    INNER JOIN tags tg
+                        ON tg.id = ttag.tag_id
+                    WHERE ttag.task_template_id = p.entity_id
+                ),
+                JSON_ARRAY()
+            )
+
+        WHEN p.type = 'event' THEN
+            COALESCE(
+                (
+                    SELECT JSON_ARRAYAGG(tg.tag)
+                    FROM event_tag etag
+                    INNER JOIN tags tg
+                        ON tg.id = etag.tag_id
+                    WHERE etag.event_template_id = p.entity_id
+                ),
+                JSON_ARRAY()
+            )
+    END AS tags,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Все reminder_templates сущности + последний reminder instance каждого template
+    |--------------------------------------------------------------------------
+    */
     COALESCE(
-        t.deadline,
-        t.period_start
-    ) AS nearest_time,
+        (
+            SELECT JSON_ARRAYAGG(
+                JSON_OBJECT(
+                    'template_id', rt.id,
+                    'text', rt.text,
+                    'remind_value', rt.remind_value,
+                    'remind_type', rt.remind_type,
 
-    t.period_end AS period_end,
+                    'reminder_id', r.id,
+                    'date_remind', r.date_remind,
+                    'reminder_status', r.status
+                )
+            )
+            FROM reminder_templates rt
 
-    /* TAGS TASK */
-    COALESCE((
-        SELECT JSON_ARRAYAGG(tg.tag)
-        FROM tag_task ttg
-        JOIN tags tg ON tg.id = ttg.tag_id
-        WHERE ttg.task_template_id = tt.id
-    ), JSON_ARRAY()) AS tags,
+            LEFT JOIN reminders r
+                ON r.id = (
+                    SELECT MAX(r2.id)
+                    FROM reminders r2
+                    WHERE r2.template_id = rt.id
+                      AND r2.status IN ('pending', 'processing')
+                )
 
-    /* REMINDERS TASK */
-    COALESCE((
-        SELECT JSON_ARRAYAGG(JSON_OBJECT(
-            'text', rt.text,
-            'remind_value', rt.remind_value,
-            'remind_type', rt.remind_type
-        ))
-        FROM reminder_templates rt
-        WHERE rt.entity_type = 'task'
-          AND rt.entity_id = tt.id
-    ), JSON_ARRAY()) AS reminders
+            WHERE rt.entity_type = p.type
+              AND rt.entity_id = p.entity_id
+        ),
+        JSON_ARRAY()
+    ) AS reminders,
 
-FROM task_templates tt
-LEFT JOIN latest_tasks t ON t.template_id = tt.id
-WHERE tt.user_id = :user_id
-
-UNION ALL
-
-SELECT
-    et.id AS entity_id,
-    'event' AS type,
-
-    et.title,
-    et.description,
-
+    /*
+    |--------------------------------------------------------------------------
+    | Последний active reminder instance по всей задаче/событию
+    |--------------------------------------------------------------------------
+    */
     COALESCE(
-        e.deadline,
-        e.period_start
-    ) AS nearest_time,
+        (
+            SELECT JSON_OBJECT(
+                'template_id', rt.id,
+                'reminder_id', r.id,
+                'text', rt.text,
+                'remind_value', rt.remind_value,
+                'remind_type', rt.remind_type,
+                'date_remind', r.date_remind,
+                'status', r.status
+            )
+            FROM reminder_templates rt
+            INNER JOIN reminders r
+                ON r.template_id = rt.id
 
-    e.period_end AS period_end,
+            WHERE rt.entity_type = p.type
+              AND rt.entity_id = p.entity_id
+              AND r.status IN ('pending', 'processing')
 
-    /* TAGS EVENT */
-    COALESCE((
-        SELECT JSON_ARRAYAGG(tg.tag)
-        FROM event_tag etg
-        JOIN tags tg ON tg.id = etg.tag_id
-        WHERE etg.event_template_id = et.id
-    ), JSON_ARRAY()) AS tags,
+            ORDER BY r.id DESC
 
-    /* REMINDERS EVENT */
-    COALESCE((
-        SELECT JSON_ARRAYAGG(JSON_OBJECT(
-            'text', rt.text,
-            'remind_value', rt.remind_value,
-            'remind_type', rt.remind_type
-        ))
-        FROM reminder_templates rt
-        WHERE rt.entity_type = 'event'
-          AND rt.entity_id = et.id
-    ), JSON_ARRAY()) AS reminders
+            LIMIT 1
+        ),
+        JSON_OBJECT()
+    ) AS latest_reminder
 
-FROM event_templates et
-LEFT JOIN latest_events e ON e.template_id = et.id
-WHERE et.user_id = :user_id
+FROM (
+    SELECT base.*
+    FROM (
+        /*
+        |--------------------------------------------------------------------------
+        | TASKS
+        |--------------------------------------------------------------------------
+        */
+        SELECT
+            tt.id AS entity_id,
+            'task' AS type,
 
-ORDER BY nearest_time ASC
-LIMIT :limit OFFSET :offset;
+            COALESCE(
+                t.deadline,
+                t.period_start,
+                tt.deadline,
+                tt.period_start
+            ) AS nearest_time,
+
+            COALESCE(
+                t.period_end,
+                tt.period_end
+            ) AS period_end
+
+        FROM task_templates tt
+
+        INNER JOIN tasks t
+            ON t.id = (
+                SELECT MAX(t2.id)
+                FROM tasks t2
+                WHERE t2.template_id = tt.id
+                  AND t2.status IN ('pending', 'processing')
+            )
+
+        WHERE tt.user_id = :user_id_tasks
+          AND tt.status = 1
+
+
+        UNION ALL
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | EVENTS
+        |--------------------------------------------------------------------------
+        */
+        SELECT
+            et.id AS entity_id,
+            'event' AS type,
+
+            COALESCE(
+                e.deadline,
+                e.period_start,
+                et.deadline,
+                et.period_start
+            ) AS nearest_time,
+
+            COALESCE(
+                e.period_end,
+                et.period_end
+            ) AS period_end
+
+        FROM event_templates et
+
+        INNER JOIN events e
+            ON e.id = (
+                SELECT MAX(e2.id)
+                FROM events e2
+                WHERE e2.template_id = et.id
+                  AND e2.status IN ('pending', 'processing')
+            )
+
+        WHERE et.user_id = :user_id_events
+          AND et.status = 1
+
+    ) AS base
+
+    WHERE base.nearest_time IS NOT NULL
+
+    ORDER BY
+        base.nearest_time ASC,
+        base.type ASC,
+        base.entity_id ASC
+
+    LIMIT :limit OFFSET :offset
+) AS p
+
+LEFT JOIN task_templates tt
+    ON p.type = 'task'
+   AND tt.id = p.entity_id
+
+LEFT JOIN event_templates et
+    ON p.type = 'event'
+   AND et.id = p.entity_id
+
+ORDER BY
+    p.nearest_time ASC,
+    p.type ASC,
+    p.entity_id ASC
 SQL;
     }
 

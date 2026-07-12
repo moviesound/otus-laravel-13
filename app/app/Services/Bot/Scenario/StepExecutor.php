@@ -24,17 +24,19 @@ final class StepExecutor
         }
 
         if ($result->type === StepResultType::SWITCH) {
+            if (!$result->switchStep) {
+                throw new \RuntimeException('Switch step is empty');
+            }
+
             $this->stateManager->goto(
                 $context,
                 $context->scenarioDTO->scenario,
                 $result->switchStep,
-                $result->data,
-                $result->additionalInfo
+                $result->data
             );
 
-            if (!$result->switchStep) {
-                throw new \RuntimeException('Switch step is empty');
-            }
+            $context->messenger->deleteUserMessages();
+            $context->messenger->deleteSystemMessages();
 
             $next = $this->registry->get($result->switchStep);
 

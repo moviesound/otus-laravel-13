@@ -8,12 +8,12 @@ use App\Models\Bot\Step;
 
 class StepRepository implements StepRepositoryInterface
 {
-    public function get(int|string $chatId): ?StepStateDTO
+    public function get(int|string $userSocialId, string $messenger): ?StepStateDTO
     {
         $step = Step::query()
-            ->whereHas('userSocial', function ($query) use ($chatId) {
-                $query->byType('telegram')
-                    ->bySocialId($chatId);
+            ->whereHas('userSocial', function ($query) use ($userSocialId, $messenger) {
+                $query->byType($messenger)
+                    ->byId($userSocialId);
             })
             ->first();
 

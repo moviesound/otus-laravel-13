@@ -34,7 +34,7 @@ class BotContextBuilder
         );
 
         // 2. state
-        $state = $this->stepRepo->get($userSocialId);
+        $state = $this->stepRepo->get($userSocialId,  $input->messenger);
 
         // 3. resolve scenario
         $resolvedState = $this->scenarioResolver->resolve(
@@ -42,6 +42,14 @@ class BotContextBuilder
             userSocialId: $userSocialId,
             message: $input->text
         );
+
+        if (
+            $state === null
+            && $resolvedState->scenario !== 'unknown'
+            && $resolvedState->step !== 'unknown'
+        ) {
+            $this->stepRepo->save($resolvedState);
+        }
 
         // 4. message DTO
         $messageDTO = new MessageDTO(
@@ -60,6 +68,7 @@ class BotContextBuilder
         // 6. final context
         return new BotContext(
             userDTO: $user,
+            userSocialId: $userSocialId,
             scenarioDTO: $resolvedState,
             messageDTO: $messageDTO,
             messenger: $messenger,

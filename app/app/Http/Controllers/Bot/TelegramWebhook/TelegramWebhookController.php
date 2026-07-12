@@ -2,18 +2,23 @@
 
 namespace App\Http\Controllers\Bot\TelegramWebhook;
 
-use App\Events\TelegramMessageEvent;
-use App\Http\Controllers\Bot\TelegramWebhook\Requests\TelegramWebhookRequest;
-use Illuminate\Http\Response;
+use App\DTO\Bot\TelegramWebhook\TelegramMessageDTO;
+use App\Events\Bot\TelegramWebhook\TelegramMessageEvent;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
-class TelegramWebhookController
+final class TelegramWebhookController
 {
-    public function __invoke(TelegramWebhookRequest $request): Response
+    public function __invoke(Request $request): JsonResponse
     {
-        TelegramMessageReceived::dispatch(
-            $request->all()
-        );
+        $payload = $request->json()->all();
 
-        return response('ok');
+        $dto = TelegramMessageDTO::fromArray($payload);
+
+        TelegramMessageEvent::dispatch($dto);
+
+        return response()->json([
+            'ok' => true,
+        ]);
     }
 }

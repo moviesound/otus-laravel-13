@@ -30,8 +30,11 @@ return new class extends Migration
             $table->index('user_id');
             $table->index('remind_type');
 
-            $table->index('entity_type');
             $table->index('entity_id');
+            $table->index(
+                ['entity_type', 'entity_id', 'id'],
+                'reminder_templates_entity_type_id_pk_idx'
+            );
 
             // FULLTEXT
             $table->fullText('text');

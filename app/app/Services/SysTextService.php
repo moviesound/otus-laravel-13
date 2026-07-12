@@ -78,7 +78,12 @@ class SysTextService implements SysTextInterface
                     $row = SysTextRepository::getByAliasAndLang($alias, 'ru');
                 }
 
-                return Arr::only($row, ['id', 'alias', 'lang', 'context']);
+                return Arr::only($row ?? [], [
+                    'id',
+                    'alias',
+                    'lang',
+                    'context'
+                ]);
             }
         );
 

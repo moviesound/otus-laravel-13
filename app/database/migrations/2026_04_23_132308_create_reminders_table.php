@@ -30,10 +30,13 @@ return new class extends Migration
             $table->timestamps();
 
 
-            $table->index('template_id');
             $table->index('date_remind');
             $table->index('status');
             $table->index('created_at');
+            $table->index(
+                ['template_id', 'status', 'id'],
+                'reminders_template_status_id_idx'
+            );
         });
     }
 

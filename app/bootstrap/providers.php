@@ -1,8 +1,7 @@
 <?php
 
-use App\Providers\AppServiceProvider;
-
 return [
-    AppServiceProvider::class,
-    App\Providers\BotProvider::class,
+    \App\Providers\AppServiceProvider::class,
+    \App\Providers\BotServiceProvider::class,
+    \App\Providers\EventServiceProvider::class,
 ];

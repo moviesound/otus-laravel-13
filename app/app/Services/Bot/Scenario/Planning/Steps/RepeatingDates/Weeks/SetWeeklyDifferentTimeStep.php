@@ -14,7 +14,7 @@ use App\Services\Bot\Helpers\Scenarios\Messages\MessageIntentResolver;
 use App\Services\Bot\Helpers\Scenarios\ScenarioHelper;
 use App\Services\Bot\Helpers\Dates\TimeRangeParser;
 use App\Services\Bot\Messengers\MessengerTextResolver;
-use App\Services\Bot\Scenario\Planning\Steps\AddRemindersStep;
+use App\Services\Bot\Scenario\Planning\Steps\Reminders\AddRemindersStep;
 use App\Services\Bot\Scenario\StepResultFactory;
 
 final class SetWeeklyDifferentTimeStep implements StepInterface

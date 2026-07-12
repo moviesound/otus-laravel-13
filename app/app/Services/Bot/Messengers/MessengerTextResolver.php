@@ -37,8 +37,8 @@ final class MessengerTextResolver
         $typeText = $this->get($typeAlias, $messenger, $lang);
         $stepText = $this->get($stepAlias, $messenger, $lang);
 
-        $typeOk = $typeText !== $typeAlias;
-        $stepOk = $stepText !== $stepAlias;
+        $typeOk = $typeText !== $typeAlias;//translation exists
+        $stepOk = $stepText !== $stepAlias;//translation exists
 
         if (!$typeOk || !$stepOk) {
             return '';

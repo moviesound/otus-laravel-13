@@ -13,6 +13,7 @@ use App\Services\Bot\Helpers\Scenarios\Messages\MessageContext;
 use App\Services\Bot\Helpers\Scenarios\Messages\MessageIntentResolver;
 use App\Services\Bot\Helpers\Scenarios\ScenarioHelper;
 use App\Services\Bot\Messengers\MessengerTextResolver;
+use App\Services\Bot\Scenario\Planning\Steps\Reminders\AddRemindersStep;
 use App\Services\Bot\Scenario\StepResultFactory;
 
 final class SetMonthlyCommonTimeStep implements StepInterface

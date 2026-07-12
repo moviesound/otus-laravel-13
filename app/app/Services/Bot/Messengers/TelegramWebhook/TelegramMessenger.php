@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Bot\TelegramWebhook;
+namespace App\Services\Bot\Messengers\TelegramWebhook;
 
 use App\Contracts\Bot\Messengers\MessengerInterface;
 use App\Contracts\Bot\Repositories\TelegramRepositoryInterface;

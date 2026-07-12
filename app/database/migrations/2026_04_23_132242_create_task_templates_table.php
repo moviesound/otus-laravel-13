@@ -59,7 +59,6 @@ return new class extends Migration
             $table->tinyInteger('has_sms')->default(0)->comment('Пользователь хочет обязательное напоминание через смс');
 
             // Индексы
-            $table->index('user_id');
             $table->index('repeat_type');
             $table->index('created_at');
             $table->index('updated_at');
@@ -68,6 +67,10 @@ return new class extends Migration
             $table->index('has_sms');
             $table->index('time_set_by_user');
             $table->index('task_type');
+            $table->index(
+                ['user_id', 'status', 'id'],
+                'task_templates_user_status_id_idx'
+            );
 
             // FULLTEXT
             $table->fullText('title');

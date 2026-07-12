@@ -11,5 +11,8 @@ enum MessageIntent: string
     case Edit = 'edit';
     case Delete = 'delete';
     case Add = 'add';
+
+    case Yes = 'yes';
+    case No = 'no';
     case Unknown = 'unknown';
 }

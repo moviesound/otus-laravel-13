@@ -4,6 +4,7 @@ namespace App\Services\Bot\Scenario;
 
 use App\Contracts\Bot\Scenario\ScenarioResolverInterface;
 use App\DTO\Bot\State\StepStateDTO;
+use App\Services\Bot\Scenario\Planning\Steps\SelectPlanTypeStep;
 
 class ScenarioResolver implements ScenarioResolverInterface
 {
@@ -37,7 +38,7 @@ class ScenarioResolver implements ScenarioResolverInterface
             '/task', '/event', '/plan' => new StepStateDTO(
                 userSocialId: $userSocialId,
                 scenario: 'onPlanning',
-                step: 'selectType',
+                step: SelectPlanTypeStep::STEP_KEY,
                 message: null,
                 data: null,
                 additionalInfo: null,

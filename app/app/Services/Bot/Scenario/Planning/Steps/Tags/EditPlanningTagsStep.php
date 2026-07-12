@@ -6,7 +6,7 @@ use App\Contracts\Bot\Scenario\Steps\StepInterface;
 use App\DTO\Bot\Scenarios\StepResultDTO;
 use App\Enums\Bot\MessageIntent;
 use App\Services\Bot\BotContext;
-use App\Services\Bot\Errors\WrongNumberMessage;
+use App\Services\Bot\Errors\WrongTagNumberMessage;
 use App\Services\Bot\Helpers\Scenarios\Messages\MessageButtons;
 use App\Services\Bot\Helpers\Scenarios\Messages\MessageContext;
 use App\Services\Bot\Helpers\Scenarios\Messages\MessageIntentResolver;
@@ -22,7 +22,7 @@ final class EditPlanningTagsStep implements StepInterface
     public function __construct(
         private readonly MessageIntentResolver $intentResolver,
         private readonly MessengerTextResolver $textResolver,
-        private readonly WrongNumberMessage $wrongNumberMessage,
+        private readonly WrongTagNumberMessage $wrongNumberMessage,
     )
     {
     }

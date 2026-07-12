@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Bot\TelegramWebhook;
+namespace App\Services\Bot\Messengers\TelegramWebhook;
 
 use App\Contracts\Bot\TelegramWebhook\TelegramGatewayInterface;
 use Illuminate\Support\Facades\Http;

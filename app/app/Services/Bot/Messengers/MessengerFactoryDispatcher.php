@@ -4,7 +4,7 @@ namespace App\Services\Bot\Messengers;
 
 use App\Contracts\Bot\Messengers\MessengerFactoryInterface;
 use App\Contracts\Bot\Messengers\MessengerInterface;
-use App\Services\Bot\TelegramWebhook\TelegramMessengerFactory;
+use App\Services\Bot\Messengers\TelegramWebhook\TelegramMessengerFactory;
 
 class MessengerFactoryDispatcher implements MessengerFactoryInterface
 {

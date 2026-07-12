@@ -33,11 +33,14 @@ class TelegramPrettyFormatter extends LineFormatter
             $e = $context['exception'];
 
             $trace = $this->shortTrace($e);
-
             $exceptionText =
                 "\n\n<b>Exception:</b> " . get_class($e) .
                 "\n<b>Location:</b> " . $e->getFile() . ":" . $e->getLine() .
-                "\n\n<b>Trace:</b>\n<blockquote expandable>" . $trace . "</blockquote>";
+                ($trace ? "\n\n<b>Trace:</b>\n" . $trace : "");
+            //$exceptionText =
+            //    "\n\n<b>Exception:</b> " . get_class($e) .
+            //    "\n<b>Location:</b> " . $e->getFile() . ":" . $e->getLine() .
+            //    ($trace ? "\n\n<b>Trace:</b>\n<blockquote expandable>" . $trace . "</blockquote>" : "");
         }
 
         $header =
