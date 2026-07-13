@@ -224,7 +224,7 @@ class AdminControllerTest extends TestCase
 
         $this->be($admin, 'admin');
 
-        $response = $this->postJson('/users/password/'. $admin->id);
+        $response = $this->patchJson('/users/password/'. $admin->id);
 
         $response->assertStatus(200);
     }
@@ -235,7 +235,7 @@ class AdminControllerTest extends TestCase
 
         $this->be($admin, 'admin');
 
-        $response = $this->postJson('/users/password/1000');
+        $response = $this->patchJson('/users/password/1000');
 
         $response
             ->assertStatus(404)

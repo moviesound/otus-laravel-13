@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
-        commands: __DIR__.'/../routes/console.php',
+        commands: __DIR__ . '/../routes/console.php',
         health: '/up',
         using: function () {
             // WEB
@@ -50,15 +50,20 @@ return Application::configure(basePath: dirname(__DIR__))
                 return response()->view('errors.403', [], 403);
             }
 
-            if ($e instanceof \App\Exceptions\AdminNotFoundException
-                || $e instanceof \App\Exceptions\DuplicateSysTextException
-                || $e instanceof \App\Exceptions\DuplicateAdminException
-                || $e instanceof \App\Exceptions\SysTextNotFoundException
-            ) {
+            if ($e instanceof \App\Exceptions\DuplicateAdminException
+                || $e instanceof \App\Exceptions\DuplicateSysTextException) {
                 return response()->json([
                     'status' => 'error',
                     'message' => $e->getMessage(),
-                ], 422);
+                ], 409);
+            }
+
+            if ($e instanceof \App\Exceptions\AdminNotFoundException
+                || $e instanceof \App\Exceptions\SysTextNotFoundException) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => $e->getMessage(),
+                ], 404);
             }
 
             return null;
