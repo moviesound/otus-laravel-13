@@ -5,6 +5,7 @@ namespace App\Services\Bot\Scenario\Planning\Steps;
 use App\Contracts\Bot\Repositories\StepRepositoryInterface;
 use App\Contracts\Bot\Scenario\Steps\StepInterface;
 use App\DTO\Bot\Scenarios\StepResultDTO;
+use App\Models\Bot\Step;
 use App\Services\Bot\BotContext;
 use App\Services\Bot\Entities\PlanningEntityCreator;
 use App\Services\Bot\Errors\WrongDataUseButtonsMessage;
@@ -13,6 +14,7 @@ use App\Services\Bot\Helpers\Scenarios\ScenarioHelper;
 use App\Services\Bot\Helpers\Scenarios\Summeries\PlanningPreviewFormatter;
 use App\Services\Bot\Scenario\StepResultFactory;
 use App\Services\Bot\Messengers\MessengerTextResolver;
+use Illuminate\Support\Facades\DB;
 use Throwable;
 
 final class PlanningDoneStep implements StepInterface
@@ -60,6 +62,8 @@ final class PlanningDoneStep implements StepInterface
 
         $data['action'] = 'add';
 
+        DB::beginTransaction();
+
         try {
             $result = $this->creator->create(
                 user: $context->userDTO,
@@ -86,7 +90,16 @@ final class PlanningDoneStep implements StepInterface
             );
 
             $this->stepRepo->clear($context->userSocialId);
+
+            DB::commit();
         } catch (Throwable $e) {
+            DB::rollBack();
+
+            Step::find($context->userSocialId)?->update([
+                'step' => AlmostDonePlanningAddingStep::STEP_KEY,
+            ]);
+
+            logger()->error($e->getMessage() . PHP_EOL . $e->getFile() . PHP_EOL . $e->getLine() . PHP_EOL . $e->getTraceAsString());
             $context->messenger?->sendMessage(
                 text: $this->text('something_went_wrong', $messenger, $lang),
                 isTemporary: false,

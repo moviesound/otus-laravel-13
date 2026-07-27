@@ -9,8 +9,6 @@ use Illuminate\Support\Facades\Log;
 
 final class LogTelegramWebhookListener implements ShouldQueue
 {
-    public bool $afterCommit = false;
-
     public function handle(TelegramMessageEvent $event): void
     {
         if (App::isProduction()) {

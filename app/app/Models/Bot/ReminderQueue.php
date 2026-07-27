@@ -10,8 +10,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 #[Fillable([
-    'entity_id',
-    'entity_type',
     'reminder_id',
     'user_id',
     'channel',

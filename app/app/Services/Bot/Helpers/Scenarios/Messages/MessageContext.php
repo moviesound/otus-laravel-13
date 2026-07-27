@@ -16,14 +16,26 @@ class MessageContext
         ];
     }
 
-    public static function setScenario(BotContext $context, string $scenario, string $step): void
+    public static function setScenario(BotContext $context, string $scenario, string $step, bool $first_enter = false, bool $substitute = false): void
     {
+        $data = json_decode($context->scenarioDTO->data ?? '{}', true);
+
+        if ($substitute === true) {
+            $data['resume'] = [
+                'scenario' => $context->scenarioDTO->scenario,
+                'step' => $context->scenarioDTO->step,
+                'first_enter' => $first_enter,
+            ];
+        } else {
+            unset($data['resume']);
+        }
+
         $context->scenarioDTO = new StepStateDTO(
             userSocialId: $context->scenarioDTO->userSocialId,
             scenario: $scenario,
             step: $step,
             message: $context->scenarioDTO->message,
-            data: $context->scenarioDTO->data,
+            data: json_encode($data),
             additionalInfo: $context->scenarioDTO->additionalInfo,
             commonEntityId: $context->scenarioDTO->commonEntityId,
         );

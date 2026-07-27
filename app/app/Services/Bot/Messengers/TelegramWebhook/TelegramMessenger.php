@@ -195,12 +195,18 @@ final class TelegramMessenger implements MessengerInterface
         $messages = $this->repo
             ->getAllUserMessagesOfChat($this->chatId);
 
+
         foreach ($messages as $message) {
-            $this->deleteUserMessage(
-                $message['message_id'],
-                $message['id']
-            );
+            try {
+                $this->deleteUserMessage(
+                    $message['message_id'],
+                    $message['id']
+                );
+            } catch (\Throwable $e) {
+                $this->repo->deleteUserRowById($message['id']);
+            }
         }
+
     }
 
     public function deleteSystemMessages(): void
@@ -209,10 +215,14 @@ final class TelegramMessenger implements MessengerInterface
             ->getAllSystemMessagesOfChat($this->chatId);
 
         foreach ($messages as $message) {
-            $this->deleteSystemMessage(
-                $message['message_id'],
-                $message['id']
-            );
+            try {
+                $this->deleteSystemMessage(
+                    $message['message_id'],
+                    $message['id']
+                );
+            } catch (\Throwable $e) {
+                $this->repo->deleteSystemRowById($message['id']);
+            }
         }
     }
 
@@ -223,12 +233,17 @@ final class TelegramMessenger implements MessengerInterface
         $messages = $this->repo
             ->getSystemMessagesByQueueId($queueId);
 
-        foreach ($messages as $message) {
-            $this->deleteSystemMessage(
-                $message['message_id'],
-                $message['id']
-            );
-        }
+            foreach ($messages as $message) {
+                try {
+                    $this->deleteSystemMessage(
+                        $message['message_id'],
+                        $message['id']
+                    );
+                } catch (\Throwable $e) {
+                    $this->repo->deleteSystemRowById($message['id']);
+                }
+            }
+
     }
 
     public function format(string $header, string $message, ?string $error = null): string

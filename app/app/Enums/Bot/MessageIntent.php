@@ -13,6 +13,5 @@ enum MessageIntent: string
     case Add = 'add';
 
     case Yes = 'yes';
-    case No = 'no';
     case Unknown = 'unknown';
 }

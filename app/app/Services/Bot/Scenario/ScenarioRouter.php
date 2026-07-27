@@ -3,16 +3,17 @@
 namespace App\Services\Bot\Scenario;
 
 use App\Contracts\Bot\Scenario\ScenarioRouterInterface;
+use App\Contracts\Bot\Scenario\StepExecutorInterface;
+use App\Contracts\Bot\Scenario\StepRegistryInterface;
 use App\Contracts\SysTextInterface;
 use App\Services\Bot\BotContext;
-use App\Services\Bot\Helpers\Scenarios\Messages\MessageContext;
 
 class ScenarioRouter implements ScenarioRouterInterface
 {
     public function __construct(
-        private readonly StepRegistry       $registry,
-        private readonly StepExecutor       $executor,
-        private readonly SysTextInterface   $sysText,
+        private readonly StepRegistryInterface $registry,
+        private readonly StepExecutorInterface $executor,
+        private readonly SysTextInterface      $sysText,
     )
     {
     }
@@ -26,6 +27,7 @@ class ScenarioRouter implements ScenarioRouterInterface
 
             $this->executor->execute($step, $context);
         } catch (\Throwable $e) {
+            logger()->error($e->getMessage() . ' ' . $e->getTraceAsString() . ' ' . $e->getFile() . ' ' . $e->getLine());
             $this->unknown(
                 $context
             );

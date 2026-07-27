@@ -11,8 +11,13 @@ use Illuminate\Http\Request;
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         commands: __DIR__ . '/../routes/console.php',
-        health: '/up',
         using: function () {
+            //for checking container is UP at prod servers
+            Route::get('/up', function () {
+                return response()->json([
+                    'status' => 'ok',
+                ]);
+            });
             // WEB
             Route::middleware('web')
                 ->domain(config('domains.web'))

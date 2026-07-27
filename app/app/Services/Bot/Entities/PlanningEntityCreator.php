@@ -387,8 +387,6 @@ final class PlanningEntityCreator
             ]);
 
             ReminderQueue::create([
-                'entity_id' => $template->id,
-                'entity_type' => $entityType,
                 'reminder_id' => $reminder->id,
                 'user_id' => $user->id,
                 'channel' => $channel,

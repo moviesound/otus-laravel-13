@@ -54,7 +54,7 @@ return [
 
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['telegram', 'daily'],
+            'channels' => ['daily', 'telegram'],
             'ignore_exceptions' => env('LOG_IGNORE_EXCEPTIONS', true),
         ],
 
@@ -129,7 +129,7 @@ return [
 
         'telegram' => [
             'driver' => 'monolog',
-            'handler' => Monolog\Handler\TelegramBotHandler::class,
+            'handler' => App\Vendors\TelegramBotHandler::class,
             'level' => env('LOG_TELEGRAM_LEVEL', 'error'),
 
             'handler_with' => [

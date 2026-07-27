@@ -84,21 +84,24 @@ final class SelectDateModeStep implements StepInterface
     {
         [$messenger, $lang] = MessageContext::getMessengerAndLang($context);
 
-        $answer = $this->buildAnswer($context, $messenger, $lang, $error);
-        $buttons = $this->buildButtons($messenger, $lang);
+        $data = ScenarioHelper::dataNormalizer($context->scenarioDTO->data);
+        $type = $data['type'];
+
+        $answer = $this->buildAnswer($context, $type, $messenger, $lang, $error);
+        $buttons = $this->buildButtons($messenger, $lang, $type);
 
         $context->messenger?->sendMessage($answer, $buttons);
     }
 
     private function buildAnswer(
         BotContext $context,
+        string $type,
         string     $messenger,
         string     $lang,
-        ?string    $error
+        ?string    $error,
     ): string
     {
-        $data = ScenarioHelper::dataNormalizer($context->scenarioDTO->data);
-        $type = $data['type'];
+
 
         $textAlias = $type . '_enter_date_or_period';
         $text = $this->textResolver->get(
@@ -119,16 +122,18 @@ final class SelectDateModeStep implements StepInterface
         return $context->messenger->format($header, $text, $error);
     }
 
-    private function buildButtons(string $messenger, string $lang): array
+    private function buildButtons(string $messenger, string $lang, string $type): array
     {
+        $btnDeadline = 'deadline_' . ($type === 'event' ? 'event_' : '') . 'emo';
+        $btnPeriod = 'period_' . ($type === 'event' ? 'event_' : '') . 'emo';
         return [
             [
                 [
-                    'text' => $this->textResolver->get('deadline_emo', $messenger, $lang),
+                    'text' => $this->textResolver->get($btnDeadline, $messenger, $lang),
                     'callback_data' => 'deadline',
                 ],
                 [
-                    'text' => $this->textResolver->get('period_emo', $messenger, $lang),
+                    'text' => $this->textResolver->get($btnPeriod, $messenger, $lang),
                     'callback_data' => 'period',
                 ],
             ],

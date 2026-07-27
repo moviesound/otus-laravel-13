@@ -2,8 +2,10 @@
 
 namespace App\Services\Bot\Helpers\Scenarios;
 
+use App\DTO\Bot\Scenarios\StepResultDTO;
 use App\Enums\Bot\RepeatType;
 use App\Services\Bot\BotContext;
+use App\Services\Bot\Scenario\StepResultFactory;
 
 final class ScenarioHelper
 {
@@ -17,6 +19,23 @@ final class ScenarioHelper
             'yearly' => RepeatType::Yearly,
             default => null,
         };
+    }
+
+    public static function handleFirstEnter(BotContext $context, string $step): ?StepResultDTO
+    {
+        $data = ScenarioHelper::dataNormalizer($context->scenarioDTO->data);
+
+        if (empty($data['resume']['first_enter'])) {
+            return null;
+        }
+
+        unset($data['resume']['first_enter']);
+
+        return StepResultFactory::switch(
+            $step,
+            $data,
+            $context->scenarioDTO->additionalInfo
+        );
     }
 
     public static function repeatTypeCallback(RepeatType $type): string

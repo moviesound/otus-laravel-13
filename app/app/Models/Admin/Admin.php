@@ -2,7 +2,6 @@
 
 namespace App\Models\Admin;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\Admin\AdminFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;

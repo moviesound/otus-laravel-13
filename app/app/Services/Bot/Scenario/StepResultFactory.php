@@ -36,4 +36,11 @@ final class StepResultFactory
             error: $error,
         );
     }
+
+    public static function finish(): StepResultDTO
+    {
+        return new StepResultDTO(
+            type: StepResultType::FINISH,
+        );
+    }
 }

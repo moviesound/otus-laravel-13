@@ -91,22 +91,22 @@ final class AskAnotherReminderStep implements StepInterface
             $lang,
         );
 
-        $buttons = [[
-            [
+        $buttons = [
+            [[
                 'text' => $this->textResolver->get('yes', $messenger, $lang),
                 'callback_data' => 'reminder_yes',
-            ],
-            [
+            ]],
+            [[
                 'text' => $this->textResolver->get('no', $messenger, $lang),
                 'callback_data' => 'reminder_no',
-            ],
+            ]],
             MessageButtons::defaultActions(
                 textResolver: $this->textResolver,
                 messenger: $messenger,
                 lang: $lang,
                 cancelBtn: true,
             )
-        ]];
+        ];
 
         $context->messenger?->sendMessage(
             $context->messenger->format(

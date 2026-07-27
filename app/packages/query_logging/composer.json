@@ -1,0 +1,26 @@
+{
+    "name": "packages/query_logging",
+    "description": "Logging of CRUD actions in Laravel",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Packages\\QueryLogging\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Sergey Klimov",
+            "email": "moviesound@ya.ru"
+        }
+    ],
+    "require": {
+        "illuminate/support": "^13.0"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Packages\\QueryLogging\\ServiceProvider"
+            ]
+        }
+    }
+}

@@ -85,6 +85,7 @@ class AdminControllerTest extends TestCase
         return $adminUser;
     }
 
+
     public function test_users_page_returns_200(): void
     {
         $admin = $this->authHelper();

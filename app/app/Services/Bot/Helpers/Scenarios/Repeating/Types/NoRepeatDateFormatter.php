@@ -50,13 +50,10 @@ final class NoRepeatDateFormatter
         ?array $periodEnd,
     ): string {
         if ($mode === 'deadline') {
-            return $this->build(
+            return $this->formatTaskDeadline(
+                $deadline,
                 $messenger,
                 $lang,
-                'repeat_type_new_task',
-                'one_time_task',
-                $this->taskDeadlineStart($messenger, $lang),
-                $this->taskDeadlineEnd($deadline, $messenger, $lang),
             );
         }
 
@@ -79,13 +76,10 @@ final class NoRepeatDateFormatter
         ?array $periodEnd,
     ): string {
         if ($mode === 'deadline') {
-            return $this->build(
+            return $this->formatEventDeadline(
+                $deadline,
                 $messenger,
                 $lang,
-                'repeat_type_new_event',
-                'one_time_event',
-                $this->eventDeadlineStart($deadline, $messenger, $lang),
-                '',
             );
         }
 
@@ -144,7 +138,6 @@ final class NoRepeatDateFormatter
             messenger: $messenger,
             lang: $lang,
             showTime: true,
-            alwaysShowYear: true,
         );
     }
 
@@ -239,6 +232,8 @@ final class NoRepeatDateFormatter
             return '';
         }
 
+        $year = $date['year'] ?? $this->resolveYear($date);
+
         $result = '';
 
         if (
@@ -247,10 +242,10 @@ final class NoRepeatDateFormatter
         ) {
             if ($useAtTime) {
                 $result .= $this->textResolver->get(
-                        'at_time',
-                        $messenger,
-                        $lang,
-                    ) . ' NoRepeatDateFormatter.php';
+                    'at_time',
+                    $messenger,
+                    $lang,
+                );
             }
 
             $result .= sprintf(
@@ -260,8 +255,7 @@ final class NoRepeatDateFormatter
                 ) . ', ';
         }
 
-        $result .= $date['day'];
-        $result .= ' ';
+        $result .= $date['day'] . ' ';
         $result .= $this->datesFormatter->monthName(
             number: $date['month'],
             messenger: $messenger,
@@ -270,11 +264,9 @@ final class NoRepeatDateFormatter
 
         if (
             $alwaysShowYear ||
-            $date['year'] != date('Y')
+            $year !== (int) date('Y')
         ) {
-            $result .= ' ';
-            $result .= $date['year'];
-            $result .= ' ';
+            $result .= ' ' . $year . ' ';
             $result .= $this->textResolver->get(
                 'year_rod',
                 $messenger,
@@ -283,5 +275,71 @@ final class NoRepeatDateFormatter
         }
 
         return $result;
+    }
+
+    private function resolveYear(array $date): int
+    {
+        $currentYear = (int) date('Y');
+
+        $candidate = mktime(
+            0,
+            0,
+            0,
+            $date['month'],
+            $date['day'],
+            $currentYear,
+        );
+
+        return $candidate >= strtotime('today')
+            ? $currentYear
+            : $currentYear + 1;
+    }
+
+    private function formatTaskDeadline(
+        ?array $deadline,
+        string $messenger,
+        string $lang,
+    ): string {
+        return $this->textResolver->get(
+            'repeat_type_new_deadline',
+            $messenger,
+            $lang,
+            [
+                'type' => $this->textResolver->get(
+                    'one_time_task',
+                    $messenger,
+                    $lang,
+                ),
+                'date' => $this->taskDeadlineEnd(
+                    $deadline,
+                    $messenger,
+                    $lang,
+                ),
+            ],
+        );
+    }
+
+    private function formatEventDeadline(
+        ?array $deadline,
+        string $messenger,
+        string $lang,
+    ): string {
+        return $this->textResolver->get(
+            'repeat_type_new_deadline_event',
+            $messenger,
+            $lang,
+            [
+                'type' => $this->textResolver->get(
+                    'one_time_event',
+                    $messenger,
+                    $lang,
+                ),
+                'date' => $this->taskDeadlineEnd(
+                    $deadline,
+                    $messenger,
+                    $lang,
+                ),
+            ],
+        );
     }
 }

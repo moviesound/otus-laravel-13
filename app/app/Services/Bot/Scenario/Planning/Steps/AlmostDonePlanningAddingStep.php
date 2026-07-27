@@ -21,11 +21,12 @@ final class AlmostDonePlanningAddingStep implements StepInterface
     public const STEP_KEY = 'almostDoneAdding';
 
     public function __construct(
-        private readonly PlanningPreviewFormatter $previewFormatter,
-        private readonly MessageIntentResolver $intentResolver,
+        private readonly PlanningPreviewFormatter   $previewFormatter,
+        private readonly MessageIntentResolver      $intentResolver,
         private readonly WrongDataUseButtonsMessage $wrongDataUseButtonsMessage,
-        private readonly MessengerTextResolver $messengerTextResolver,
-    ) {
+        private readonly MessengerTextResolver      $messengerTextResolver,
+    )
+    {
     }
 
     public static function stepKey(): string
@@ -40,13 +41,12 @@ final class AlmostDonePlanningAddingStep implements StepInterface
         $intent = ($this->intentResolver)($message);
 
         return match ($intent) {
-
             MessageIntent::Back =>
             StepResultFactory::switch(
                 AddRemindersStep::STEP_KEY
             ),
 
-            MessageIntent::No =>
+            MessageIntent::Deny =>
             StepResultFactory::switch(
                 PlanningDoneStep::STEP_KEY
             ),
@@ -60,8 +60,10 @@ final class AlmostDonePlanningAddingStep implements StepInterface
 
     public function show(
         BotContext $context,
-        ?string $error = null
-    ): void {
+        ?string    $error = null
+    ): void
+    {
+        logger()->error(var_export($context, true));
         [$messenger, $lang] = MessageContext::getMessengerAndLang($context);
 
         $data = ScenarioHelper::dataNormalizer($context->scenarioDTO->data);
@@ -76,6 +78,7 @@ final class AlmostDonePlanningAddingStep implements StepInterface
 
         $context->messenger?->sendMessage(
             $context->messenger->format(
+                '',
                 $message,
                 $error
             ),
@@ -88,12 +91,12 @@ final class AlmostDonePlanningAddingStep implements StepInterface
         return [
             [
                 [
-                    'text' => $this->text('confirm_creation', $messenger, $lang),
-                    'callback_data' => 'no',
-                ],
-                [
                     'text' => $this->text('back', $messenger, $lang),
                     'callback_data' => 'back',
+                ],
+                [
+                    'text' => $this->text('confirm_creation', $messenger, $lang),
+                    'callback_data' => 'no',
                 ],
             ],
         ];

@@ -10,6 +10,7 @@ use App\Services\Bot\Errors\WrongDataUseButtonsMessage;
 use App\Services\Bot\Helpers\Scenarios\Messages\MessageButtons;
 use App\Services\Bot\Helpers\Scenarios\Messages\MessageContext;
 use App\Services\Bot\Helpers\Scenarios\Messages\MessageIntentResolver;
+use App\Services\Bot\Helpers\Scenarios\Reminders\ReminderFormatter;
 use App\Services\Bot\Helpers\Scenarios\ScenarioHelper;
 use App\Services\Bot\Messengers\MessengerTextResolver;
 use App\Services\Bot\Scenario\Planning\Steps\AlmostDonePlanningAddingStep;
@@ -22,10 +23,12 @@ final class AddRemindersStep implements StepInterface
     public const STEP_KEY = 'addReminders';
 
     public function __construct(
-        private readonly MessengerTextResolver $textResolver,
-        private readonly MessageIntentResolver $intentResolver,
+        private readonly MessengerTextResolver      $textResolver,
+        private readonly MessageIntentResolver      $intentResolver,
         private readonly WrongDataUseButtonsMessage $wrongDataUseButtonsMessage,
-    ) {
+        private readonly ReminderFormatter          $reminderFormatter,
+    )
+    {
     }
 
     public static function stepKey(): string
@@ -63,8 +66,9 @@ final class AddRemindersStep implements StepInterface
 
     private function handleMessage(
         BotContext $context,
-        string $message,
-    ): StepResultDTO {
+        string     $message,
+    ): StepResultDTO
+    {
 
         $reminderTypes = [
             'reminder_hours' => 'hours',
@@ -94,8 +98,9 @@ final class AddRemindersStep implements StepInterface
 
     public function show(
         BotContext $context,
-        ?string $error = null
-    ): void {
+        ?string    $error = null
+    ): void
+    {
         $data = ScenarioHelper::dataNormalizer($context->scenarioDTO->data);
 
         [$messenger, $lang] = MessageContext::getMessengerAndLang($context);
@@ -137,7 +142,11 @@ final class AddRemindersStep implements StepInterface
                 $messenger,
                 $lang,
                 [
-                    'reminders' => '', // сюда позже подставится formatter
+                    'reminders' => $this->reminderFormatter->list(
+                        $data['reminders'] ?? [],
+                        $messenger,
+                        $lang,
+                    ),
                 ]
             );
         }
@@ -177,7 +186,7 @@ final class AddRemindersStep implements StepInterface
             ]];
         }
 
-        $buttons[] =  MessageButtons::defaultActions(
+        $buttons[] = MessageButtons::defaultActions(
             textResolver: $this->textResolver,
             messenger: $messenger,
             lang: $lang,
@@ -197,6 +206,17 @@ final class AddRemindersStep implements StepInterface
             !empty($data['weekly_common_time']) ||
             !empty($data['monthly_common_time']) ||
             !empty($data['quarterly_common_time']) ||
-            !empty($data['yearly_common_time']);
+            !empty($data['yearly_common_time']) ||
+            isset($data['date_mode']) && $data['date_mode'] === 'deadline' &&
+                !empty($data['deadline_date']) &&
+                isset($data['deadline_date']['hour'], $data['deadline_date']['minute']) ||
+            $data['type'] === 'event' &&
+                isset($data['date_mode']) && $data['date_mode'] === 'period' &&
+                !empty($data['period_start']) &&
+                isset($data['period_start']['hour'], $data['period_start']['minute']) ||
+            $data['type'] === 'task' &&
+                isset($data['date_mode']) && $data['date_mode'] === 'period' &&
+                !empty($data['period_end']) &&
+                isset($data['period_end']['hour'], $data['period_end']['minute']);
     }
 }

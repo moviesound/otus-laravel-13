@@ -20,7 +20,8 @@ class StateManager implements StateManagerInterface
         BotContext $context,
         string $scenario,
         string $step,
-        ?array $data = null
+        ?array $data = null,
+        ?string $additionalInfo = null
     ): void {
         $existingData = [];
 
@@ -33,19 +34,17 @@ class StateManager implements StateManagerInterface
             $data ?? []
         );
 
-        $dto = new StepStateDTO(
+        $context->scenarioDTO = $dto = new StepStateDTO(
             userSocialId: $context->scenarioDTO->userSocialId,
             scenario: $scenario,
             step: $step,
             message: $context->messageDTO->value(),
             data: json_encode($mergedData),
-            additionalInfo: $context->scenarioDTO->additionalInfo,
+            additionalInfo: $additionalInfo ?: $context->scenarioDTO->additionalInfo,
             commonEntityId: null,
         );
 
         $this->steps->save($dto);
-
-        MessageContext::setScenario($context, $scenario, $step);
     }
 
     public function clear(BotContext $context): void

@@ -48,6 +48,7 @@ use App\Services\Bot\Scenario\Planning\Steps\Tags\AddPlanningTagsStep;
 use App\Services\Bot\Scenario\Planning\Steps\Tags\DeletePlanningTagsStep;
 use App\Services\Bot\Scenario\Planning\Steps\Tags\EditPlanningTagsStep;
 use App\Services\Bot\Scenario\Planning\Steps\Tags\EditPlanningTagValueStep;
+use App\Services\Bot\Scenario\Politics\Steps\ConfirmAgreementPoliticsStep;
 use App\Services\Bot\Scenario\StepRegistry;
 use Illuminate\Support\ServiceProvider;
 
@@ -62,7 +63,8 @@ class BotServiceProvider extends ServiceProvider
         $this->registerMiddleware();
         $this->registerScenarios();
         $this->registerRepositories();
-        $this->tagBotSteps();
+        $this->registerUsers();
+        $this->setBotSteps();
     }
 
     /**
@@ -86,7 +88,8 @@ class BotServiceProvider extends ServiceProvider
             \App\Services\Bot\MessageHandler::class
         );
 
-        $this->app->bind(\App\Contracts\Bot\Messengers\MessengerFactoryInterface::class,
+        $this->app->bind(
+            \App\Contracts\Bot\Messengers\MessengerFactoryInterface::class,
             \App\Services\Bot\Messengers\MessengerFactoryDispatcher::class);
 
     }
@@ -103,8 +106,17 @@ class BotServiceProvider extends ServiceProvider
             \App\Services\Bot\Scenario\ScenarioResolver::class
         );
 
-        $this->app->bind(\App\Contracts\Bot\Scenario\StateManagerInterface::class,
+        $this->app->bind(
+            \App\Contracts\Bot\Scenario\StateManagerInterface::class,
             \App\Services\Bot\Scenario\StateManager::class);
+
+        $this->app->bind(
+            \App\Contracts\Bot\Scenario\StepRegistryInterface::class,
+            \App\Services\Bot\Scenario\StepRegistry::class);
+
+        $this->app->bind(
+            \App\Contracts\Bot\Scenario\StepExecutorInterface::class,
+            \App\Services\Bot\Scenario\StepExecutor::class);
     }
 
     private function registerMiddleware(): void
@@ -117,6 +129,14 @@ class BotServiceProvider extends ServiceProvider
         $this->app->bind(
             \App\Contracts\Bot\Scenario\Middleware\Cases\PoliticsMiddlewareInterface::class,
             \App\Services\Bot\Scenario\Middleware\Cases\PoliticsMiddleware::class
+        );
+    }
+
+    private function registerUsers(): void
+    {
+        $this->app->bind(
+            \App\Contracts\Bot\Users\UserResolverInterface::class,
+            \App\Services\Bot\Users\UserResolverService::class
         );
     }
 
@@ -163,7 +183,7 @@ class BotServiceProvider extends ServiceProvider
         );
     }
 
-    private function tagBotSteps()
+    private function setBotSteps()
     {
         $this->app->singleton(
             StepRegistry::class,
@@ -231,6 +251,7 @@ class BotServiceProvider extends ServiceProvider
 
 
                 //Politics
+                ConfirmAgreementPoliticsStep::STEP_KEY => ConfirmAgreementPoliticsStep::class,
             ])
         );
     }

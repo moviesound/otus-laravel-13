@@ -7,11 +7,11 @@ use App\DTO\Bot\Scenarios\StepResultDTO;
 use App\Enums\Bot\MessageIntent;
 use App\Services\Bot\BotContext;
 use App\Services\Bot\Errors\WrongReminderNumberMessage;
-use App\Services\Bot\Errors\WrongTagNumberMessage;
-use App\Services\Bot\Helpers\ReminderFormatter;
+
 use App\Services\Bot\Helpers\Scenarios\Messages\MessageButtons;
 use App\Services\Bot\Helpers\Scenarios\Messages\MessageContext;
 use App\Services\Bot\Helpers\Scenarios\Messages\MessageIntentResolver;
+use App\Services\Bot\Helpers\Scenarios\Reminders\ReminderFormatter;
 use App\Services\Bot\Helpers\Scenarios\ScenarioHelper;
 use App\Services\Bot\Messengers\MessengerTextResolver;
 use App\Services\Bot\Scenario\Planning\Steps\PlanningDoneStep;
@@ -25,7 +25,7 @@ final class DeleteReminderStep implements StepInterface
         private readonly MessengerTextResolver $textResolver,
         private readonly MessageIntentResolver $intentResolver,
         private readonly ReminderFormatter $reminderFormatter,
-        private readonly WrongTagNumberMessage $wrongReminderNumberMessage,
+        private readonly WrongReminderNumberMessage $wrongReminderNumberMessage,
     ) {
     }
 
@@ -112,6 +112,8 @@ final class DeleteReminderStep implements StepInterface
             [
                 'reminders' => $this->reminderFormatter->list(
                     $data['reminders'] ?? [],
+                    $messenger,
+                    $lang,
                 ),
             ]
         );

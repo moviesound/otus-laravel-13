@@ -7,9 +7,116 @@ use App\DTO\Bot\User\UserDTO;
 use App\DTO\Bot\User\UserSocialDTO;
 use App\Models\Bot\User;
 use App\Models\Bot\UserSocial;
+use App\Models\Bot\UserState;
 
 class UserRepository implements UserRepositoryInterface
 {
+    public function findBySocial(
+        string $type,
+        string|int $socialId
+    ): ?UserDTO {
+
+        $social = UserSocial::query()
+            ->where('type', $type)
+            ->where('social_id', $socialId)
+            ->with('user.socials')
+            ->first();
+
+
+        if (!$social) {
+            return null;
+        }
+
+
+        return $this->mapUser($social->user);
+    }
+
+    public function createUserWithSocial(
+        string $messenger,
+        string|int $chatId
+    ): UserDTO {
+
+
+        $user = User::create([
+            'name' => 'Друг',
+            'sex' => 1,
+            'language' => 'ru',
+            'timezone' => 'Europe/Moscow',
+            'tariff_id' => 1,
+        ]);
+
+
+        UserSocial::create([
+            'user_id' => $user->id,
+            'type' => $messenger,
+            'social_id' => $chatId,
+            'is_main' => 1,
+        ]);
+
+
+        UserState::create([
+            'user_id' => $user->id,
+            'balance' => 0,
+            'currency' => 'RUB',
+        ]);
+
+
+        $user->load('socials');
+
+
+        return $this->mapUser($user);
+    }
+
+    private function mapUser(User $user): UserDTO
+    {
+        return new UserDTO(
+            id: $user->id,
+            name: $user->name,
+            sex: $user->sex,
+
+            email: $user->email,
+            phone: $user->phone,
+            phoneProved: $user->phone_proved,
+
+            speaker: $user->speaker,
+            tariffId: $user->tariff_id,
+            language: $user->language,
+
+            timezone: $user->timezone,
+
+            locationId: $user->location_id,
+
+            birthDay: $user->birth_day,
+            birthMonth: $user->birth_month,
+            birthYear: $user->birth_year,
+
+            politicsAgreed: $user->politics_agreed,
+
+            morningTimeWorkdays: $user->morning_time_workdays,
+            morningTimeHolidays: $user->morning_time_holidays,
+            eveningTimeWorkdays: $user->evening_time_workdays,
+            eveningTimeHolidays: $user->evening_time_holidays,
+
+            morningDigestStatus: $user->morning_digest_status,
+            eveningDigestStatus: $user->evening_digest_status,
+
+            digestCurrencies: $user->digest_currencies,
+            digestWeather: $user->digest_weather,
+
+            userSocials: collect($user->socials)
+                ->map(fn(UserSocial $social) => new UserSocialDTO(
+                    id: $social->id,
+                    userId: $social->user_id,
+                    type: $social->type,
+                    socialId: $social->social_id,
+                    isMain: $social->is_main,
+                    keyboard: $social->keyboard,
+                    currentFolderS3: $social->current_folder_s3,
+                ))
+                ->toArray()
+        );
+    }
+
     public function getUserByChatIdAndMessengerType(
         string $chatId,
         string $messangerType

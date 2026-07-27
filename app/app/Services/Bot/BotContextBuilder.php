@@ -6,6 +6,7 @@ use App\Contracts\Bot\Messengers\MessengerFactoryInterface;
 use App\Contracts\Bot\Repositories\StepRepositoryInterface;
 use App\Contracts\Bot\Repositories\UserRepositoryInterface;
 use App\Contracts\Bot\Scenario\ScenarioResolverInterface;
+use App\Contracts\Bot\Users\UserResolverInterface;
 use App\DTO\Bot\BotInput;
 use App\DTO\Bot\Message\MessageDTO;
 use App\Enums\Bot\MessageType;
@@ -14,6 +15,7 @@ class BotContextBuilder
 {
     public function __construct(
         private readonly UserRepositoryInterface $userRepo,
+        private readonly UserResolverInterface $userResolver,
         private readonly StepRepositoryInterface $stepRepo,
         private readonly ScenarioResolverInterface $scenarioResolver,
         private readonly MessengerFactoryInterface $messengerFactory,
@@ -22,15 +24,15 @@ class BotContextBuilder
     public function build(BotInput $input): BotContext
     {
         // 1. user
-        $user = $this->userRepo->getUserByChatIdAndMessengerType(
-            $input->chatId,
-            $input->messenger
+        $user = $this->userResolver->resolve(
+            chatId: $input->chatId,
+            messenger: $input->messenger
         );
 
         // 2. user_socials.id
         $userSocialId = $this->userRepo->getSocialUserIdByChatIdAndMessengerType(
-            $input->chatId,
-            $input->messenger
+            chatId: $input->chatId,
+            messangerType: $input->messenger
         );
 
         // 2. state

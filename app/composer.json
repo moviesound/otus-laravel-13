@@ -11,7 +11,8 @@
         "laravel/tinker": "^3.0",
         "mongodb/laravel-mongodb": "^5.7",
         "packages/query_logging": "dev-main",
-        "spatie/laravel-permission": "^7.4"
+        "spatie/laravel-permission": "^7.4",
+        "ext-curl": "*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^4.2",
@@ -89,7 +90,7 @@
     "repositories": [
         {
             "type": "path",
-            "url": "../packages/query_logging"
+            "url": "./packages/query_logging"
         }
     ]
 }

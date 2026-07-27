@@ -15,6 +15,7 @@ final readonly class PlanningPreviewFormatter
         private MessengerTextResolver $textResolver,
         private ReminderFormatter     $reminderFormatter,
         private RepeatingInfoText     $repeatingInfoText,
+        private DatesFormatter         $datesFormatter,
     )
     {
     }
@@ -51,21 +52,21 @@ final readonly class PlanningPreviewFormatter
             $lang,
         );
 
-        $deadline = $this->deadline(
+        $deadline = ''; /*$this->deadline(
             $data,
             $messenger,
             $lang,
-        );
+        );*/
 
         if ($done === false) {
-            $label = $data['type'] . '_was_created_ask';
+            $label = 'task_was_created_ask';
             $type = $this->textResolver->get(
                 $data['type'] . ($messenger === 'telegram' ? '_dat' : '_vin'),
                 $messenger,
                 $lang,
             );
         } else {
-            $label = $data['type'] . '_was_created';
+            $label = 'task_was_created';
             $type = $this->textResolver->get(
                 $data['type'] . ($messenger === 'telegram' ? '' : '_vin'),
                 $messenger,
@@ -118,7 +119,7 @@ final readonly class PlanningPreviewFormatter
         $deadline = '';
         if (isset($data['date_mode']) && !empty($data['date_mode'])) {
             $periodStart = ($data['period_start']['day'] ?? '') . ' ' .
-                DatesFormatter::MonthName(
+                $this->datesFormatter->monthName(
                     number: $data['period_start']['month'] ?? 0,
                     messenger: $messenger,
                     lang: $lang
@@ -129,7 +130,7 @@ final readonly class PlanningPreviewFormatter
                 (isset($data['period_start']['minute']) ? ':' . (
                     $data['period_start']['minute'] > 9 ? $data['period_start']['minute'] : '0' . $data['period_start']['minute']) : '');
             $periodEnd = isset($data['period_end']) ? ' - ' . ($data['period_end']['day'] ?? '') . ' ' .
-                DatesFormatter::MonthName(
+                $this->datesFormatter->monthName(
                     number: $data['period_end']['month'] ?? 0,
                     messenger: $messenger,
                     lang: $lang
@@ -140,7 +141,7 @@ final readonly class PlanningPreviewFormatter
                 (isset($data['period_end']['minute']) ? ':' . (
                     $data['period_end']['minute'] > 9 ? $data['period_end']['minute'] : '0' . $data['period_end']['minute']) : '') : '';
             $deadlineDate = ($data['deadline_date']['day'] ?? '') . ' ' .
-                DatesFormatter::MonthName(
+                $this->datesFormatter->monthName(
                     number: $data['deadline_date']['month'] ?? 0,
                     messenger: $messenger,
                     lang: $lang

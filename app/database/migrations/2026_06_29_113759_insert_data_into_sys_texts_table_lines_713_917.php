@@ -19,6 +19,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement('DELETE FROM sys_texts WHERE id BETWEEN 713 AND 916');
+        DB::statement('DELETE FROM sys_texts WHERE id BETWEEN 713 AND 917');
     }
 };

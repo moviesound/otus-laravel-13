@@ -8,25 +8,30 @@ use Carbon\CarbonImmutable;
 final class TimeResolver
 {
     /**
-     * @param $type : morning|evening
+     * @param string $type morning|evening
      *
      * @return array{int, int}
      */
     public function defaultHourMinuteForDate(
-        CarbonImmutable    $date,
+        CarbonImmutable $date,
         UserDefaultTimeDTO $defaultTime,
-        string             $type,
-    ): array
-    {
-        $isHoliday = (int)$date->format('N') >= 6;
+        string $type,
+    ): array {
+        $isHoliday = (int) $date->format('N') >= 6;
 
-        $key = $isHoliday
-            ? "{$type}_time_holidays"
-            : "{$type}_time_workdays";
+        $fallback = $type === 'morning'
+            ? '08:00'
+            : '21:00';
 
-        $fallback = $type === 'morning' ? '08:00' : '21:00';
+        $time = match ([$type, $isHoliday]) {
+            ['morning', false] => $defaultTime->morningWorkdays,
+            ['morning', true]  => $defaultTime->morningHolidays,
+            ['evening', false] => $defaultTime->eveningWorkdays,
+            ['evening', true]  => $defaultTime->eveningHolidays,
+            default => $fallback,
+        };
 
-        return $this->parseTime($defaultTime[$key] ?? $fallback, $fallback);
+        return $this->parseTime($time, $fallback);
     }
 
     /**
@@ -42,13 +47,13 @@ final class TimeResolver
 
         if ($type === 'start') {
             return $isHoliday
-                ? ($defaultTime['morning_time_holidays'] ?? '09:00')
-                : ($defaultTime['morning_time_workdays'] ?? '08:00');
+                ? ($defaultTime->morningHolidays ?? '09:00')
+                : ($defaultTime->morningWorkdays ?? '08:00');
         }
 
         return $isHoliday
-            ? ($defaultTime['evening_time_holidays'] ?? '22:00')
-            : ($defaultTime['evening_time_workdays'] ?? '21:00');
+            ? ($defaultTime->eveningHolidays ?? '22:00')
+            : ($defaultTime->eveningWorkdays ?? '21:00');
     }
 
     /**

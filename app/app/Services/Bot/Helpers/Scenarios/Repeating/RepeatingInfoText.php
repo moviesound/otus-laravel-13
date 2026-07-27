@@ -84,11 +84,10 @@ final class RepeatingInfoText
         string $lang,
     ): string {
         if (
-            !isset(
-                $data['date_mode'],
-                $data['deadline_date'],
-                $data['period_start'],
-                $data['period_end'],
+            !isset($data['date_mode'])
+            && (
+                !isset($data['deadline_date'])
+                || !isset($data['period_start'], $data['period_end'])
             )
         ) {
             return '';

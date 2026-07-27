@@ -13,9 +13,10 @@ class TelegramGateway implements TelegramGatewayInterface
         array  $payload
     ): array
     {
-        $response = Http::timeout(4)
+        $response = Http::timeout(10)
+            ->connectTimeout(5)
             ->post(
-                "https://api.telegram.org/bot" . config('services.telegram.api_key') . $method,
+                "https://" . config('services.telegram.api_domain') . "/bot" . config('services.telegram.api_key') . $method,
                 $payload
             );
 

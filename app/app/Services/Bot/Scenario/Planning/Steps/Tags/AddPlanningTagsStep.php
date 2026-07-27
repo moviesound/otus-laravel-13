@@ -50,10 +50,10 @@ final class AddPlanningTagsStep implements StepInterface
             MessageIntent::Continue =>
             StepResultFactory::switch(SelectRepeatingOrDateStep::STEP_KEY),
 
-            'edit' =>
+            MessageIntent::Edit =>
             StepResultFactory::switch(EditPlanningTagsStep::STEP_KEY),
 
-            'delete' =>
+            MessageIntent::Delete =>
             StepResultFactory::switch(DeletePlanningTagsStep::STEP_KEY),
 
             default =>

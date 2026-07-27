@@ -50,7 +50,7 @@ final class SelectRepeatTypeStep implements StepInterface
         return match ($intent) {
             MessageIntent::Back =>
             StepResultFactory::switch(
-                SelectDateModeStep::STEP_KEY
+                SelectRepeatingOrDateStep::STEP_KEY
             ),
 
             MessageIntent::Stop =>
@@ -201,7 +201,7 @@ final class SelectRepeatTypeStep implements StepInterface
         );
 
         $body = $this->textResolver->get(
-            'set_repeating_type',
+            'choose_repeat_type',
             $messenger,
             $lang
         );

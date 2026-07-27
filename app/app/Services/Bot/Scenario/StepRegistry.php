@@ -2,9 +2,10 @@
 
 namespace App\Services\Bot\Scenario;
 
+use App\Contracts\Bot\Scenario\StepRegistryInterface;
 use App\Contracts\Bot\Scenario\Steps\StepInterface;
 
-final class StepRegistry
+final class StepRegistry implements StepRegistryInterface
 {
     public function __construct(
         private readonly array $steps

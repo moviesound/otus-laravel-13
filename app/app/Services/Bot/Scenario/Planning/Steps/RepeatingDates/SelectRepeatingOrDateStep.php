@@ -10,9 +10,11 @@ use App\Services\Bot\Errors\WrongDataUseButtonsMessage;
 use App\Services\Bot\Helpers\Scenarios\Messages\MessageButtons;
 use App\Services\Bot\Helpers\Scenarios\Messages\MessageContext;
 use App\Services\Bot\Helpers\Scenarios\Messages\MessageIntentResolver;
+use App\Services\Bot\Helpers\Scenarios\Repeating\RepeatingInfoText;
 use App\Services\Bot\Helpers\Scenarios\ScenarioHelper;
 use App\Services\Bot\Messengers\MessengerTextResolver;
 use App\Services\Bot\Scenario\Planning\Steps\PlanningDoneStep;
+use App\Services\Bot\Scenario\Planning\Steps\Reminders\AddRemindersStep;
 use App\Services\Bot\Scenario\Planning\Steps\RepeatingDates\Dates\SelectDateModeStep;
 use App\Services\Bot\Scenario\Planning\Steps\Tags\AddPlanningTagsStep;
 use App\Services\Bot\Scenario\StepResultFactory;
@@ -26,6 +28,7 @@ final class SelectRepeatingOrDateStep implements StepInterface
         private readonly MessageIntentResolver $intentResolver,
         private readonly MessengerTextResolver $textResolver,
         private readonly WrongDataUseButtonsMessage $wrongDataUseButtonsMessage,
+        private readonly RepeatingInfoText $repeatingInfoText,
     ) {}
 
     public static function stepKey(): string
@@ -46,6 +49,9 @@ final class SelectRepeatingOrDateStep implements StepInterface
             MessageIntent::Stop =>
             StepResultFactory::switch(PlanningDoneStep::STEP_KEY),
 
+            MessageIntent::Continue =>
+            StepResultFactory::switch(AddRemindersStep::STEP_KEY),
+
             default => $this->handleMessage($context, $message),
         };
     }
@@ -64,7 +70,7 @@ final class SelectRepeatingOrDateStep implements StepInterface
 
         if ($message === 'repeat') {
             return StepResultFactory::switch(
-                SelectDateModeStep::STEP_KEY,
+                SelectRepeatTypeStep::STEP_KEY,
                 [
                     'repeating_type' => 'repeat',
                 ]
@@ -88,6 +94,7 @@ final class SelectRepeatingOrDateStep implements StepInterface
         );
 
         $buttons = $this->buildButtons(
+            $context,
             $messenger,
             $lang
         );
@@ -108,10 +115,22 @@ final class SelectRepeatingOrDateStep implements StepInterface
         $headerKey = ScenarioHelper::headerKey($context);
 
         $text = $this->textResolver->get(
-            'select_repeat_or_date',
+            'set_repeating_type',
             $messenger,
             $lang
         );
+
+        $data = ScenarioHelper::dataNormalizer($context->scenarioDTO->data);
+
+        $info = $this->repeatingInfoText->build(
+            $data,
+            $messenger,
+            $lang,
+        );
+
+        if ($info !== '') {
+            $text .= "\n\n" . $info;
+        }
 
         return $context->messenger->format(
             $this->textResolver->header($messenger, $lang, $headerKey, 'task_step_repeating'),
@@ -121,11 +140,14 @@ final class SelectRepeatingOrDateStep implements StepInterface
     }
 
     private function buildButtons(
+        BotContext $context,
         string $messenger,
         string $lang
     ): array
     {
-        return [
+        $data = ScenarioHelper::dataNormalizer($context->scenarioDTO->data);
+
+        $buttons = [
             [
                 [
                     'text' => $this->textResolver->get('no_repeat_task', $messenger, $lang),
@@ -138,13 +160,17 @@ final class SelectRepeatingOrDateStep implements StepInterface
                     'callback_data' => 'repeat',
                 ],
             ],
-            MessageButtons::defaultActions(
-                textResolver: $this->textResolver,
-                messenger: $messenger,
-                lang: $lang,
-                backBtn: true,
-                cancelBtn: true,
-            ),
         ];
+
+        $buttons[] = MessageButtons::defaultActions(
+            textResolver: $this->textResolver,
+            messenger: $messenger,
+            lang: $lang,
+            skipBtn: isset($data['repeating_type']),
+            backBtn: true,
+            cancelBtn: true,
+        );
+
+        return $buttons;
     }
 }

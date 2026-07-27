@@ -13,9 +13,10 @@ final class TelegramWebhookController
     {
         $payload = $request->json()->all();
 
-        $dto = TelegramMessageDTO::fromArray($payload);
-
-        TelegramMessageEvent::dispatch($dto);
+        if (!isset($payload['channel_post']) && !isset($payload['my_chat_member'])) {
+            $dto = TelegramMessageDTO::fromArray($payload);
+            TelegramMessageEvent::dispatch($dto);
+        }
 
         return response()->json([
             'ok' => true,

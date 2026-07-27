@@ -11,6 +11,7 @@ interface StateManagerInterface
         string $scenario,
         string $step,
         ?array $data = null,
+        ?string $additionalInfo = null
     ): void;
 
     public function clear(BotContext $context): void;
