@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 #[Fillable([
     'user_id', 'type', 'social_id',
@@ -16,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class UserSocial extends Model
 {
     use HasFactory;
+
     protected $table = 'user_socials';
 
     protected $casts = [
@@ -40,6 +42,12 @@ class UserSocial extends Model
     }
 
     #[Scope]
+    protected function byId(Builder $query, int|string $id)
+    {
+        return $query->where('id', $id);
+    }
+
+    #[Scope]
     protected function bySocialId(Builder $query, string|int $id)
     {
         return $query->where('social_id', $id);
@@ -52,6 +60,15 @@ class UserSocial extends Model
     }
 
     /* Relations */
+
+    public function step(): HasOne
+    {
+        return $this->hasOne(
+            Step::class,
+            'user_social_id',
+            'id'
+        );
+    }
 
     public function user(): BelongsTo
     {

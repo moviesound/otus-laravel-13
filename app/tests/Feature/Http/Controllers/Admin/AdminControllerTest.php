@@ -85,6 +85,7 @@ class AdminControllerTest extends TestCase
         return $adminUser;
     }
 
+
     public function test_users_page_returns_200(): void
     {
         $admin = $this->authHelper();
@@ -224,7 +225,7 @@ class AdminControllerTest extends TestCase
 
         $this->be($admin, 'admin');
 
-        $response = $this->postJson('/users/password/'. $admin->id);
+        $response = $this->patchJson('/users/password/'. $admin->id);
 
         $response->assertStatus(200);
     }
@@ -235,7 +236,7 @@ class AdminControllerTest extends TestCase
 
         $this->be($admin, 'admin');
 
-        $response = $this->postJson('/users/password/1000');
+        $response = $this->patchJson('/users/password/1000');
 
         $response
             ->assertStatus(404)

@@ -119,7 +119,7 @@ class TaskTemplate extends Model
     {
         return $this->belongsToMany(
             CommonEntity::class,
-            'common_entity_event',
+            'common_entity_task',
             'child_id',
             'entity_id'
         );

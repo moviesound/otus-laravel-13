@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'deadline',
     'check_remind_next_time',
     'next_system_remind_at',
+    'last_shown_in_digest_at',
 ])]
 class Event extends Model
 {
@@ -37,6 +38,7 @@ class Event extends Model
 
         'check_remind_next_time' => 'datetime',
         'next_system_remind_at' => 'datetime',
+        'last_shown_in_digest_at' => 'datetime',
 
         'created_at' => 'datetime',
     ];

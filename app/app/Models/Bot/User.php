@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
     'morning_time_holidays', 'evening_time_workdays',
     'evening_time_holidays', 'morning_digest_status',
     'evening_digest_status', 'digest_currencies', 'digest_weather',
+    'timezone'
 ])]
 class User extends Model
 {
@@ -124,6 +125,4 @@ class User extends Model
     {
         return $this->hasMany(ReminderQueue::class, 'user_id');
     }
-
-
 }

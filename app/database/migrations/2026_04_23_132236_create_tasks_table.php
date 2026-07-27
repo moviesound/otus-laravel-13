@@ -63,7 +63,11 @@ return new class extends Migration
             $table->index('created_at');
             $table->index('next_system_remind_at');
             $table->index('last_shown_in_digest_at');
-            $table->index('template_id');
+
+            $table->index(
+                ['template_id', 'status', 'id'],
+                'tasks_template_status_id_idx'
+            );
         });
     }
 

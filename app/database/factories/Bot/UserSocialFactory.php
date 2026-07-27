@@ -37,4 +37,12 @@ class UserSocialFactory extends Factory
             'updated_at' => now(),
         ];
     }
+
+    public function telegram(int $chatId): static
+    {
+        return $this->state(fn () => [
+            'type' => 'telegram',
+            'social_id' => $chatId,
+        ]);
+    }
 }

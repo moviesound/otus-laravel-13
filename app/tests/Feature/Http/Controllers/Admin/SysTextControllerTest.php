@@ -174,7 +174,7 @@ class SysTextControllerTest extends TestCase
         $response->assertStatus(404)
             ->assertJson([
                 'status' => 'error',
-                'message' => 'Запись не найдена',
+                'message' => 'Такой текст не найден.',
             ]);
     }
 

@@ -1,7 +1,6 @@
 <?php
 
-use App\Models\Bot\ReminderTemplate;
-use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Admin\TelegramWebhookTestController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,16 +14,6 @@ Route::middleware(['auth:admin'])->group(function () {
 
     require base_path('routes/admin/users.php');
 
-    Route::get('/test-error', function () {
-        0/0;
-        return 'error generated';
-    })->middleware('permission:users.create');
-
-    Route::get('/test-error-custom', function () {
-        throw new Exception('test error custom via Exception');
-        return 'error generated';
-    })->middleware('permission:users.create');
-
     Route::post('/logout', function () {
         Auth::guard('admin')->logout();
 
@@ -35,6 +24,16 @@ Route::middleware(['auth:admin'])->group(function () {
     })->name('logout');
 
 });
+
+
+/**
+ * TESTS
+ */
+
+
+Route::get('/dev/telegram', [TelegramWebhookTestController::class, 'index']);
+Route::post('/dev/telegram', [TelegramWebhookTestController::class, 'send']);
+
 
 //Route::get('/', function () {
 //    return Auth::guard('admin')->check()

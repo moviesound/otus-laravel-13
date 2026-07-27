@@ -10,9 +10,14 @@ use Illuminate\Http\Request;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
-        commands: __DIR__.'/../routes/console.php',
-        health: '/up',
+        commands: __DIR__ . '/../routes/console.php',
         using: function () {
+            //for checking container is UP at prod servers
+            Route::get('/up', function () {
+                return response()->json([
+                    'status' => 'ok',
+                ]);
+            });
             // WEB
             Route::middleware('web')
                 ->domain(config('domains.web'))
@@ -50,15 +55,20 @@ return Application::configure(basePath: dirname(__DIR__))
                 return response()->view('errors.403', [], 403);
             }
 
-            if ($e instanceof \App\Exceptions\AdminNotFoundException
-                || $e instanceof \App\Exceptions\DuplicateSysTextException
-                || $e instanceof \App\Exceptions\DuplicateAdminException
-                || $e instanceof \App\Exceptions\SysTextNotFoundException
-            ) {
+            if ($e instanceof \App\Exceptions\DuplicateAdminException
+                || $e instanceof \App\Exceptions\DuplicateSysTextException) {
                 return response()->json([
                     'status' => 'error',
                     'message' => $e->getMessage(),
-                ], 422);
+                ], 409);
+            }
+
+            if ($e instanceof \App\Exceptions\AdminNotFoundException
+                || $e instanceof \App\Exceptions\SysTextNotFoundException) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => $e->getMessage(),
+                ], 404);
             }
 
             return null;
