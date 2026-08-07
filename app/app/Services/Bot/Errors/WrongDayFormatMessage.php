@@ -2,9 +2,9 @@
 
 namespace App\Services\Bot\Errors;
 
-use App\Services\Bot\BotContext;
+use App\Services\Bot\Contexts\BotContext;
+use App\Services\Bot\Helpers\Messages\MessengerTextResolver;
 use App\Services\Bot\Helpers\Scenarios\Messages\MessageContext;
-use App\Services\Bot\Messengers\MessengerTextResolver;
 
 class WrongDayFormatMessage
 {

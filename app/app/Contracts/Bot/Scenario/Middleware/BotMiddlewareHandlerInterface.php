@@ -2,8 +2,7 @@
 
 namespace App\Contracts\Bot\Scenario\Middleware;
 
-use App\Services\Bot\BotContext;
-use Closure;
+use App\Services\Bot\Contexts\BotContext;
 
 /**
  * Executes global bot middleware before scenario routing.

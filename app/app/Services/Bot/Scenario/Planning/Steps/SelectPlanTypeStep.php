@@ -6,11 +6,12 @@ use App\Contracts\Bot\Scenario\Steps\StepInterface;
 use App\DTO\Bot\Scenarios\StepResultDTO;
 use App\Enums\Bot\MessageIntent;
 use App\Repositories\Bot\PlanningRepository\SearchPlanningRepository;
-use App\Services\Bot\BotContext;
+use App\Services\Bot\Contexts\BotContext;
 use App\Services\Bot\Errors\WrongDataUseButtonsMessage;
+use App\Services\Bot\Helpers\Messages\MessengerTextResolver;
 use App\Services\Bot\Helpers\Scenarios\Messages\MessageContext;
 use App\Services\Bot\Helpers\Scenarios\Messages\MessageIntentResolver;
-use App\Services\Bot\Messengers\MessengerTextResolver;
+use App\Services\Bot\Scenario\Planning\Steps\Search\FindPlansStep;
 use App\Services\Bot\Scenario\StepResultFactory;
 
 final class SelectPlanTypeStep implements StepInterface
@@ -81,7 +82,7 @@ final class SelectPlanTypeStep implements StepInterface
 
 
         $row = [];
-        if (!$this->hasTasks($context)) {
+        if ($this->hasTasks($context)) {
             $row[] = [
                 'text' => $this->textResolver->get(
                     'find_task',

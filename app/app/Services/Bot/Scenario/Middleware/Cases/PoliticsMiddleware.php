@@ -5,9 +5,8 @@ namespace App\Services\Bot\Scenario\Middleware\Cases;
 use App\Contracts\Bot\Repositories\StepRepositoryInterface;
 use App\Contracts\Bot\Scenario\Middleware\Cases\PoliticsMiddlewareInterface;
 use App\DTO\Bot\State\StepStateDTO;
-use App\Services\Bot\BotContext;
+use App\Services\Bot\Contexts\BotContext;
 use App\Services\Bot\Helpers\Scenarios\Messages\MessageContext;
-use App\Services\Bot\Helpers\Scenarios\ScenarioHelper;
 use App\Services\Bot\Scenario\Politics\Steps\ConfirmAgreementPoliticsStep;
 
 class PoliticsMiddleware implements PoliticsMiddlewareInterface

@@ -15,7 +15,6 @@ class UserRepository implements UserRepositoryInterface
         string $type,
         string|int $socialId
     ): ?UserDTO {
-
         $social = UserSocial::query()
             ->where('type', $type)
             ->where('social_id', $socialId)
@@ -27,7 +26,6 @@ class UserRepository implements UserRepositoryInterface
             return null;
         }
 
-
         return $this->mapUser($social->user);
     }
 
@@ -35,14 +33,33 @@ class UserRepository implements UserRepositoryInterface
         string $messenger,
         string|int $chatId
     ): UserDTO {
-
-
         $user = User::create([
             'name' => 'Друг',
             'sex' => 1,
+
             'language' => 'ru',
             'timezone' => 'Europe/Moscow',
+
             'tariff_id' => 1,
+
+            'phone_proved' => 0,
+            'speaker' => 'marina',
+
+            'politics_agreed' => 0,
+
+            'morning_time_workdays' => '08:00',
+            'morning_time_holidays' => '10:00',
+            'evening_time_workdays' => '21:00',
+            'evening_time_holidays' => '22:00',
+
+            'morning_digest_status' => 1,
+            'evening_digest_status' => 1,
+
+            'digest_currencies' => 0,
+            'digest_weather' => 1,
+
+            'status' => 1,
+            'is_setted' => 0,
         ]);
 
 
@@ -198,5 +215,14 @@ class UserRepository implements UserRepositoryInterface
                 'politics_agreed' => 1,
             ]);
         return true;
+    }
+
+    public function getUserAndSocialsById(int $userId): UserDTO
+    {
+        $user = User::query()
+            ->with('socials')
+            ->findOrFail($userId);
+
+        return $this->mapUser($user);
     }
 }

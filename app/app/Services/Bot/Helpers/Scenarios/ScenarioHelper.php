@@ -4,7 +4,7 @@ namespace App\Services\Bot\Helpers\Scenarios;
 
 use App\DTO\Bot\Scenarios\StepResultDTO;
 use App\Enums\Bot\RepeatType;
-use App\Services\Bot\BotContext;
+use App\Services\Bot\Contexts\BotContext;
 use App\Services\Bot\Scenario\StepResultFactory;
 
 final class ScenarioHelper

@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Events\Bot\Reminders\ReminderEvent;
 use App\Events\Bot\TelegramWebhook\TelegramMessageEvent;
-use App\Listeners\Bot\TelegramWebhook\LogTelegramWebhookListener;
+use App\Listeners\Bot\Reminders\ProcessReminderListener;
+use App\Listeners\Bot\TelegramWebhook\LogTelegramMessageListener;
 use App\Listeners\Bot\TelegramWebhook\ProcessTelegramMessageListener;
 use Illuminate\Support\ServiceProvider;
 
@@ -11,8 +13,11 @@ class EventServiceProvider extends ServiceProvider
 {
     protected $listen = [
         TelegramMessageEvent::class => [
-            LogTelegramWebhookListener::class,
+            LogTelegramMessageListener::class,
             ProcessTelegramMessageListener::class,
+        ],
+        ReminderEvent::class => [
+            ProcessReminderListener::class,
         ],
     ];
 

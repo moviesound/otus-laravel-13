@@ -6,6 +6,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Spatie\Permission\Exceptions\UnauthorizedException;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Http\Request;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -77,5 +78,12 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->dontReport([
             \App\Exceptions\Helper\DontReport::class,
         ]);
+    })->withSchedule(function (Schedule $schedule): void {
+        $schedule->command('cache:refresh')
+            ->dailyAt('02:45')
+            ->onOneServer();
 
+        $schedule->command('reminders:dispatch')
+            ->everyFiveSeconds()
+            ->onOneServer();
     })->create();

@@ -109,8 +109,8 @@ final readonly class YearlyDateCalculator
          * без проверки выходной/будний.
          */
         $time = $type === 'morning'
-            ? ($context->defaultTime['morning_time_workdays'] ?? '08:00')
-            : ($context->defaultTime['evening_time_workdays'] ?? '21:00');
+            ? ($context->defaultTime->morningWorkdays ?? '08:00')
+            : ($context->defaultTime->eveningWorkdays ?? '21:00');
 
         [$hour, $minute] = $this->timeResolver->parseTime($time);
 

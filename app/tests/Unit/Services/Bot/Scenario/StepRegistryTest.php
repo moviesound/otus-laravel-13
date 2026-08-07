@@ -13,7 +13,7 @@ class StepRegistryTest extends TestCase
         $step = new class implements StepInterface {
 
             public function handle(
-                \App\Services\Bot\BotContext $context
+                \App\Services\Bot\Contexts\BotContext $context
             ): \App\DTO\Bot\Scenarios\StepResultDTO {
                 return \App\Services\Bot\Scenario\StepResultFactory::finish();
             }
@@ -24,8 +24,8 @@ class StepRegistryTest extends TestCase
             }
 
             public function show(
-                \App\Services\Bot\BotContext $context,
-                ?string $error = null
+                \App\Services\Bot\Contexts\BotContext $context,
+                ?string                               $error = null
             ): void {
             }
         };

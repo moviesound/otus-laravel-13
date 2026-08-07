@@ -4,7 +4,7 @@ namespace App\Services\Bot\Helpers\Scenarios\Messages;
 
 use App\DTO\Bot\State\StepStateDTO;
 use App\DTO\Bot\User\UserSocialDTO;
-use App\Services\Bot\BotContext;
+use App\Services\Bot\Contexts\BotContext;
 
 class MessageContext
 {

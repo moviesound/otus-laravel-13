@@ -2,7 +2,7 @@
 
 namespace App\Contracts\Bot\Scenario;
 
-use App\Services\Bot\BotContext;
+use App\Services\Bot\Contexts\BotContext;
 
 interface ScenarioRouterInterface
 {

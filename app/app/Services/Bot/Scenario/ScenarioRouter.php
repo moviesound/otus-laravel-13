@@ -6,7 +6,7 @@ use App\Contracts\Bot\Scenario\ScenarioRouterInterface;
 use App\Contracts\Bot\Scenario\StepExecutorInterface;
 use App\Contracts\Bot\Scenario\StepRegistryInterface;
 use App\Contracts\SysTextInterface;
-use App\Services\Bot\BotContext;
+use App\Services\Bot\Contexts\BotContext;
 
 class ScenarioRouter implements ScenarioRouterInterface
 {

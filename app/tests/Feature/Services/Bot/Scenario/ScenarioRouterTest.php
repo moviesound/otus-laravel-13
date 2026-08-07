@@ -5,7 +5,7 @@ namespace Tests\Feature\Services\Bot\Scenario;
 use App\Contracts\Bot\Scenario\StepExecutorInterface;
 use App\Contracts\Bot\Scenario\Steps\StepInterface;
 use App\Contracts\SysTextInterface;
-use App\Services\Bot\BotContext;
+use App\Services\Bot\Contexts\BotContext;
 use App\Services\Bot\Scenario\ScenarioRouter;
 use App\Services\Bot\Scenario\StepRegistry;
 use Tests\BotTestCase;

@@ -5,7 +5,6 @@ namespace App\Providers;
 use App\Services\Bot\Scenario\Planning\Steps\AddPlanningDescriptionStep;
 use App\Services\Bot\Scenario\Planning\Steps\AddPlanningTitleStep;
 use App\Services\Bot\Scenario\Planning\Steps\AlmostDonePlanningAddingStep;
-use App\Services\Bot\Scenario\Planning\Steps\FindPlansStep;
 use App\Services\Bot\Scenario\Planning\Steps\PlanningDoneStep;
 use App\Services\Bot\Scenario\Planning\Steps\Reminders\AddRemindersStep;
 use App\Services\Bot\Scenario\Planning\Steps\Reminders\AddReminderTextStep;
@@ -41,6 +40,10 @@ use App\Services\Bot\Scenario\Planning\Steps\RepeatingDates\Years\SelectYearlyTy
 use App\Services\Bot\Scenario\Planning\Steps\RepeatingDates\Years\SetYearlyDeadlineDayStep;
 use App\Services\Bot\Scenario\Planning\Steps\RepeatingDates\Years\SetYearlyPeriodEndDayStep;
 use App\Services\Bot\Scenario\Planning\Steps\RepeatingDates\Years\SetYearlyPeriodStartDayStep;
+use App\Services\Bot\Scenario\Planning\Steps\Search\FindPlansStep;
+use App\Services\Bot\Scenario\Planning\Steps\Search\PlanningSearchStopStep;
+use App\Services\Bot\Scenario\Planning\Steps\Search\SearchPlansStep;
+use App\Services\Bot\Scenario\Planning\Steps\Search\ShowPlansStep;
 use App\Services\Bot\Scenario\Planning\Steps\SelectEventTypeStep;
 use App\Services\Bot\Scenario\Planning\Steps\SelectPlanTypeStep;
 use App\Services\Bot\Scenario\Planning\Steps\SelectTaskTypeStep;
@@ -181,6 +184,11 @@ class BotServiceProvider extends ServiceProvider
             \App\Contracts\Bot\Repositories\PlanningRepository\SearchPlanningRepositoryInterface::class,
             \App\Repositories\Bot\PlanningRepository\SearchPlanningRepository::class
         );
+
+        $this->app->bind(
+            \App\Contracts\Bot\Repositories\RemindersRepository\SearchRemindersRepositoryInterface::class,
+            \App\Repositories\Bot\RemindersRepository\SearchRemindersRepository::class
+        );
     }
 
     private function setBotSteps()
@@ -246,6 +254,10 @@ class BotServiceProvider extends ServiceProvider
 
                 //FindPlansStep::STEP_KEY => FindPlansStep::class,
                 FindPlansStep::STEP_KEY => FindPlansStep::class,
+                PlanningSearchStopStep::STEP_KEY => PlanningSearchStopStep::class,
+                ShowPlansStep::STEP_KEY => ShowPlansStep::class,
+                SearchPlansStep::STEP_KEY => SearchPlansStep::class,
+
 
                 //onBoarding
 

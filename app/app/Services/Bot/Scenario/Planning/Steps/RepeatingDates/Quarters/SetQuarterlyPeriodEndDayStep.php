@@ -5,19 +5,18 @@ namespace App\Services\Bot\Scenario\Planning\Steps\RepeatingDates\Quarters;
 use App\Contracts\Bot\Scenario\Steps\StepInterface;
 use App\DTO\Bot\Scenarios\StepResultDTO;
 use App\Enums\Bot\MessageIntent;
-use App\Services\Bot\BotContext;
+use App\Services\Bot\Contexts\BotContext;
 use App\Services\Bot\Errors\WrongDayFormatMessage;
 use App\Services\Bot\Errors\WrongQuarterPeriodMessage;
 use App\Services\Bot\Helpers\Dates\QuarterPeriodValidator;
+use App\Services\Bot\Helpers\Messages\MessengerTextResolver;
 use App\Services\Bot\Helpers\Scenarios\Messages\MessageButtons;
 use App\Services\Bot\Helpers\Scenarios\Messages\MessageContext;
 use App\Services\Bot\Helpers\Scenarios\Messages\MessageIntentResolver;
 use App\Services\Bot\Helpers\Scenarios\ScenarioHelper;
-use App\Services\Bot\Messengers\MessengerTextResolver;
 use App\Services\Bot\Scenario\Planning\Steps\PlanningDoneStep;
 use App\Services\Bot\Scenario\Planning\Steps\Reminders\AddRemindersStep;
 use App\Services\Bot\Scenario\StepResultFactory;
-use Illuminate\Http\Request;
 
 final class SetQuarterlyPeriodEndDayStep implements StepInterface
 {

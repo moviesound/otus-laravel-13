@@ -3,8 +3,8 @@
 namespace Tests\Unit\Services\Bot\Helpers\Scenarios\Messages;
 
 use App\Contracts\SysTextInterface;
+use App\Services\Bot\Helpers\Messages\MessengerTextResolver;
 use App\Services\Bot\Helpers\Scenarios\Messages\MessageButtons;
-use App\Services\Bot\Messengers\MessengerTextResolver;
 use Tests\TestCase;
 
 class MessageButtonsTest extends TestCase

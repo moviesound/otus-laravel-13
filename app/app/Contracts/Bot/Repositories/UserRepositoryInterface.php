@@ -13,4 +13,5 @@ interface UserRepositoryInterface
     public function agreeOnPolitics(int $userId): bool;
     public function findBySocial(string $type, string|int $socialId): ?UserDTO;
     public function createUserWithSocial(string $messenger, string|int $chatId): UserDTO;
+    public function getUserAndSocialsById(int $userId): UserDTO;
 }

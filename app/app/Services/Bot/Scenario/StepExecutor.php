@@ -8,7 +8,7 @@ use App\Contracts\Bot\Scenario\StepRegistryInterface;
 use App\Contracts\Bot\Scenario\Steps\StepInterface;
 use App\Enums\Bot\StepResultType;
 use App\Models\Bot\Step;
-use App\Services\Bot\BotContext;
+use App\Services\Bot\Contexts\BotContext;
 
 final class StepExecutor implements StepExecutorInterface
 {

@@ -5,8 +5,7 @@ namespace App\Services\Bot\Scenario;
 use App\Contracts\Bot\Repositories\StepRepositoryInterface;
 use App\Contracts\Bot\Scenario\StateManagerInterface;
 use App\DTO\Bot\State\StepStateDTO;
-use App\Services\Bot\BotContext;
-use App\Services\Bot\Helpers\Scenarios\Messages\MessageContext;
+use App\Services\Bot\Contexts\BotContext;
 use App\Services\Bot\Helpers\Scenarios\ScenarioHelper;
 
 

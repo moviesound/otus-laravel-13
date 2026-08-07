@@ -6,14 +6,14 @@ use App\Contracts\Bot\Repositories\StepRepositoryInterface;
 use App\Contracts\Bot\Scenario\Steps\StepInterface;
 use App\DTO\Bot\Scenarios\StepResultDTO;
 use App\Models\Bot\Step;
-use App\Services\Bot\BotContext;
+use App\Services\Bot\Contexts\BotContext;
 use App\Services\Bot\Entities\PlanningEntityCreator;
 use App\Services\Bot\Errors\WrongDataUseButtonsMessage;
+use App\Services\Bot\Helpers\Messages\MessengerTextResolver;
 use App\Services\Bot\Helpers\Scenarios\Messages\MessageContext;
 use App\Services\Bot\Helpers\Scenarios\ScenarioHelper;
 use App\Services\Bot\Helpers\Scenarios\Summeries\PlanningPreviewFormatter;
 use App\Services\Bot\Scenario\StepResultFactory;
-use App\Services\Bot\Messengers\MessengerTextResolver;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -101,7 +101,7 @@ final class PlanningDoneStep implements StepInterface
 
             logger()->error($e->getMessage() . PHP_EOL . $e->getFile() . PHP_EOL . $e->getLine() . PHP_EOL . $e->getTraceAsString());
             $context->messenger?->sendMessage(
-                text: $this->text('something_went_wrong', $messenger, $lang),
+                text: $this->messengerTextResolver->get('something_went_wrong', $messenger, $lang),
                 isTemporary: false,
                 noSaving: true
             );
@@ -118,14 +118,9 @@ final class PlanningDoneStep implements StepInterface
 
     private function notCreatedMessage(string $messenger, string $lang): string
     {
-        return $this->text('no_task_created', $messenger, $lang)
+        return $this->messengerTextResolver->get('no_task_created', $messenger, $lang)
             . ' '
-            . $this->text('action_canceled', $messenger, $lang);
-    }
-
-    private function text(string $key, string $messenger, string $lang): string
-    {
-        return $this->messengerTextResolver->get($key, $messenger, $lang);
+            . $this->messengerTextResolver->get('action_canceled', $messenger, $lang);
     }
 
     private function saveCommonEntityToScenarioIfPossible(
