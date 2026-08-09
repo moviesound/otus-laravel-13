@@ -6,10 +6,10 @@ use App\DTO\Bot\Message\MessageDTO;
 use App\DTO\Bot\State\StepStateDTO;
 use App\DTO\Bot\User\UserDTO;
 use App\Enums\Bot\MessageType;
-use App\Services\Bot\BotContext;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\Bot\User;
 use App\Models\Bot\UserSocial;
+use App\Services\Bot\Contexts\BotContext;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Mocks\Bot\FakeMessenger;
 
 abstract class BotTestCase extends TestCase

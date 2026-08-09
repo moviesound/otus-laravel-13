@@ -24,5 +24,6 @@ return [
         'report',
         'deadline',
         'task',
-    ]
+    ],
+    'search_tasks_amount' => 30
 ];

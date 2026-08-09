@@ -10,8 +10,8 @@ use App\DTO\Bot\User\UserDTO;
 use App\Enums\Bot\MessageType;
 use App\Events\Bot\TelegramWebhook\TelegramMessageEvent;
 use App\Listeners\Bot\TelegramWebhook\ProcessTelegramMessageListener;
-use App\Services\Bot\BotContext;
-use App\Services\Bot\BotContextBuilder;
+use App\Services\Bot\Contexts\BotContext;
+use App\Services\Bot\Contexts\BotContextBuilder;
 use Mockery;
 use Tests\TestCase;
 

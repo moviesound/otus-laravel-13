@@ -3,7 +3,7 @@
 namespace App\Services\Bot\Helpers\Scenarios\Repeating\Types;
 
 use App\Services\Bot\Helpers\Dates\DatesFormatter;
-use App\Services\Bot\Messengers\MessengerTextResolver;
+use App\Services\Bot\Helpers\Messages\MessengerTextResolver;
 
 final class NoRepeatDateFormatter
 {

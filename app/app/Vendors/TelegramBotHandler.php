@@ -265,6 +265,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
 
         $ch = curl_init();
         $url = $this->botApi . $this->apiKey . '/SendMessage';
+        curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
@@ -288,7 +289,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
 
         $result = json_decode($result, true);
 
-        if ($result['ok'] === false) {
+        if ($result && $result['ok'] === false) {
             throw new RuntimeException('Telegram API error. Description: ' . $result['description']);
         }
     }

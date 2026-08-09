@@ -3,7 +3,7 @@
 namespace App\Contracts\Bot\Scenario;
 
 use App\Contracts\Bot\Scenario\Steps\StepInterface;
-use App\Services\Bot\BotContext;
+use App\Services\Bot\Contexts\BotContext;
 
 interface StepExecutorInterface
 {

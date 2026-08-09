@@ -44,4 +44,15 @@ final class UserDTO
         /** @var UserSocialDTO[] */
         public array $userSocials,
     ) {}
+
+    public function mainSocial(): ?UserSocialDTO
+    {
+        foreach ($this->userSocials as $social) {
+            if ($social->isMain) {
+                return $social;
+            }
+        }
+
+        return null;
+    }
 }

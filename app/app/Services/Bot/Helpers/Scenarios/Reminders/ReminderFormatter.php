@@ -2,8 +2,8 @@
 
 namespace App\Services\Bot\Helpers\Scenarios\Reminders;
 
+use App\Services\Bot\Helpers\Messages\MessengerTextResolver;
 use App\Services\Bot\Helpers\Words\PluralFormatter;
-use App\Services\Bot\Messengers\MessengerTextResolver;
 
 final readonly class ReminderFormatter
 {

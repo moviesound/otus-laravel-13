@@ -2,7 +2,7 @@
 
 namespace App\Contracts\Bot\Messengers;
 
-use App\Services\Bot\BotContext;
+use App\Services\Bot\Contexts\BotContext;
 
 /**
  * Coordinates the bot message processing pipeline.

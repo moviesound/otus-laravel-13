@@ -99,11 +99,10 @@ class ReminderQueue extends Model
 
     /* Actions */
 
-    public function markProcessing(?string $worker = null): void
+    public function markProcessing(): void
     {
         $this->update([
             'status'     => 'processing',
-            'locked_by'  => $worker,
             'locked_at'  => now(),
         ]);
     }
@@ -113,7 +112,6 @@ class ReminderQueue extends Model
         $this->update([
             'status' => 'done',
             'locked_at' => null,
-            'locked_by' => null,
         ]);
     }
 
@@ -122,7 +120,6 @@ class ReminderQueue extends Model
         $this->update([
             'status' => 'failed',
             'locked_at' => null,
-            'locked_by' => null,
         ]);
     }
 

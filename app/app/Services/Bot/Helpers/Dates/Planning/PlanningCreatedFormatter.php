@@ -2,8 +2,8 @@
 
 namespace App\Services\Bot\Helpers\Dates\Planning;
 
+use App\Services\Bot\Helpers\Messages\MessengerTextResolver;
 use App\Services\Bot\Helpers\Scenarios\Summeries\PlanningPreviewFormatter;
-use App\Services\Bot\Messengers\MessengerTextResolver;
 
 final readonly class PlanningCreatedFormatter
 {

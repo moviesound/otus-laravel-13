@@ -3,7 +3,7 @@
 namespace Tests\Unit\Services\Bot\Helpers\Dates;
 
 use App\Services\Bot\Helpers\Dates\DatesFormatter;
-use App\Services\Bot\Messengers\MessengerTextResolver;
+use App\Services\Bot\Helpers\Messages\MessengerTextResolver;
 use Tests\TestCase;
 
 class DatesFormatterTest extends TestCase

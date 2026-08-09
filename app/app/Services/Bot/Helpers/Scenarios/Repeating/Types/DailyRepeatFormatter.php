@@ -2,7 +2,7 @@
 
 namespace App\Services\Bot\Helpers\Scenarios\Repeating\Types;
 
-use App\Services\Bot\Messengers\MessengerTextResolver;
+use App\Services\Bot\Helpers\Messages\MessengerTextResolver;
 
 final class DailyRepeatFormatter
 {

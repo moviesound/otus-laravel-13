@@ -62,7 +62,6 @@ class ReminderQueueFactory extends Factory
     {
         return $this->state(fn () => [
             'status' => 'processing',
-            'locked_by' => 'test-worker',
             'locked_at' => now(),
         ]);
     }

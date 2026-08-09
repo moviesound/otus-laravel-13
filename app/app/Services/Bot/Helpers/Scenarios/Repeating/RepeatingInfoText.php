@@ -2,13 +2,13 @@
 
 namespace App\Services\Bot\Helpers\Scenarios\Repeating;
 
+use App\Services\Bot\Helpers\Messages\MessengerTextResolver;
 use App\Services\Bot\Helpers\Scenarios\Repeating\Types\DailyRepeatFormatter;
 use App\Services\Bot\Helpers\Scenarios\Repeating\Types\MonthlyRepeatFormatter;
 use App\Services\Bot\Helpers\Scenarios\Repeating\Types\NoRepeatDateFormatter;
 use App\Services\Bot\Helpers\Scenarios\Repeating\Types\QuarterlyRepeatFormatter;
 use App\Services\Bot\Helpers\Scenarios\Repeating\Types\WeeklyRepeatFormatter;
 use App\Services\Bot\Helpers\Scenarios\Repeating\Types\YearlyRepeatFormatter;
-use App\Services\Bot\Messengers\MessengerTextResolver;
 
 final class RepeatingInfoText
 {

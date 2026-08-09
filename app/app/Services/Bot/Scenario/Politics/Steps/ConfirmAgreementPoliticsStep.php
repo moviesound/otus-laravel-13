@@ -5,11 +5,11 @@ namespace App\Services\Bot\Scenario\Politics\Steps;
 use App\Contracts\Bot\Scenario\Steps\StepInterface;
 use App\DTO\Bot\Scenarios\StepResultDTO;
 use App\Models\Bot\User;
-use App\Services\Bot\BotContext;
+use App\Services\Bot\Contexts\BotContext;
 use App\Services\Bot\Errors\WrongDataUseButtonsMessage;
+use App\Services\Bot\Helpers\Messages\MessengerTextResolver;
 use App\Services\Bot\Helpers\Scenarios\Messages\MessageContext;
 use App\Services\Bot\Helpers\Scenarios\ScenarioHelper;
-use App\Services\Bot\Messengers\MessengerTextResolver;
 use App\Services\Bot\Scenario\StepResultFactory;
 
 final class ConfirmAgreementPoliticsStep implements StepInterface

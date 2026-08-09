@@ -4,7 +4,7 @@ namespace App\Services\Bot\Scenario\Middleware;
 
 use App\Contracts\Bot\Scenario\Middleware\BotMiddlewareHandlerInterface;
 use App\Contracts\Bot\Scenario\Middleware\Cases\PoliticsMiddlewareInterface;
-use App\Services\Bot\BotContext;
+use App\Services\Bot\Contexts\BotContext;
 
 /**
  * Applies global business rules before routing execution to a scenario.

@@ -5,6 +5,8 @@ namespace App\Services\Bot;
 use App\Contracts\Bot\Messengers\MessageHandlerInterface;
 use App\Contracts\Bot\Scenario\Middleware\BotMiddlewareHandlerInterface;
 use App\Contracts\Bot\Scenario\ScenarioRouterInterface;
+use App\Services\Bot\Contexts\BotContext;
+
 //use App\Services\Bot\TelegramWebhook\PromoService;
 
 /**

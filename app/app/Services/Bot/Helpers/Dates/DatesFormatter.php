@@ -2,7 +2,7 @@
 
 namespace App\Services\Bot\Helpers\Dates;
 
-use App\Services\Bot\Messengers\MessengerTextResolver;
+use App\Services\Bot\Helpers\Messages\MessengerTextResolver;
 
 final readonly class DatesFormatter
 {
