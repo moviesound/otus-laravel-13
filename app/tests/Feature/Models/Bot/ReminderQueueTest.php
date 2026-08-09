@@ -109,10 +109,10 @@ class ReminderQueueTest extends TestCase
             'locked_by' => null,
         ]);
 
-        $queue->markProcessing('worker-1');
+        $queue->markProcessing();
 
         $this->assertEquals('processing', $queue->fresh()->status);
-        $this->assertEquals('worker-1', $queue->fresh()->locked_by);
+
         $this->assertNotNull($queue->fresh()->locked_at);
     }
 
@@ -121,7 +121,6 @@ class ReminderQueueTest extends TestCase
     {
         $queue = ReminderQueue::factory()->create([
             'status' => 'processing',
-            'locked_by' => 'worker',
             'locked_at' => now(),
         ]);
 
@@ -139,7 +138,6 @@ class ReminderQueueTest extends TestCase
     {
         $queue = ReminderQueue::factory()->create([
             'status' => 'processing',
-            'locked_by' => 'worker',
             'locked_at' => now(),
         ]);
 

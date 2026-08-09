@@ -289,7 +289,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
 
         $result = json_decode($result, true);
 
-        if ($result['ok'] === false) {
+        if ($result && $result['ok'] === false) {
             throw new RuntimeException('Telegram API error. Description: ' . $result['description']);
         }
     }
